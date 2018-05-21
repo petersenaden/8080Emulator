@@ -9,9 +9,13 @@ void OutputByte(char* outputString)
 	printf("%s\n", outputString);
 }
 
-char* ProcessByte(unsigned char currByte, FILE* rom)
+char* ProcessByte(unsigned char currByte, FILE* rom, int* programCounter)
 {
 	// [] notation only stays on stack for duration of function
+	unsigned char byte1;
+	unsigned char byte2;
+	char *programCounterPrefixString = malloc(200 * sizeof(char));
+	sprintf(programCounterPrefixString, "%04x ", *programCounter);
 	char *outputString = malloc(100 * sizeof(char));
 	switch(currByte)
 	{
@@ -19,106 +23,120 @@ char* ProcessByte(unsigned char currByte, FILE* rom)
 			sprintf(outputString, "NOP");
 			break;
 		case 0x01: 
-			sprintf(outputString, "LXI    B#$%02X %02X", GetNextByte(rom), GetNextByte(rom));
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			byte2 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7sB,#$%02X%02X", "LXI", byte2, byte1);
 			break;
 		case 0x02: 
-			sprintf(outputString, "STAX   B");
+			sprintf(outputString, "%-7sB", "STAX");
 			break;
 		case 0x03: 
-			sprintf(outputString, "INX    B");
+			sprintf(outputString, "%-7sB", "INX");
 			break;
 		case 0x04: 
-			sprintf(outputString, "INR    B");
+			sprintf(outputString, "%-7sB", "INR");
 			break;
 		case 0x05: 
-			sprintf(outputString, "DCR    B");
+			sprintf(outputString, "%-7sB", "DCR");
 			break;
 		case 0x06: 
-			sprintf(outputString, "MVI %02X %02X", GetNextByte(rom), GetNextByte(rom));
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7sB,#$%02X", "MVI", byte1);
 			break;
 		case 0x07: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7s", "RLC");
 			break;
 		case 0x08: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "--");
 			break;
 		case 0x09: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sB", "DAD");
 			break;
 		case 0x0a: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sB", "LDAX");
 			break;
 		case 0x0b: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sB", "DCX");
 			break;
 		case 0x0c: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sC", "INR");
 			break;
 		case 0x0d: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sC", "DCR");
 			break;
 		case 0x0e: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7sC,#$%02X", "MVI", byte1);
 			break;
 		case 0x0f: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7s", "RRC");
 			break;
 		case 0x10: 
+			sprintf(outputString, "--");
+			break;
+		case 0x11: 
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			byte2 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7sD,#$%02X%02X", "LXI", byte2, byte1);
+			break;//here
+		case 0x12: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x13: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x14: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x15: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x16: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x17: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x18: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x19: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x1a: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x1b: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x1c: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x1d: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x1e: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
+		case 0x1f: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
-		case 0x02: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
-			break;
-		case 0x02: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
-			break;
-		case 0x02: 
+		case 0x20: 
 			sprintf(outputString, "STAX %02X", GetNextByte(rom));
 			break;
 		default:
 			sprintf(outputString, "UNKNOWN OP");
 			break;
 	}
-	return outputString;
+	(*programCounter)++;
+	strncat_s(programCounterPrefixString, 200, outputString, 100);
+	return programCounterPrefixString;
 }	
 
 unsigned char GetNextByte(FILE* rom)
@@ -153,7 +171,8 @@ int main(int argc, char**argv)
 			break;
 		}
 		unsigned char currByte = GetNextByte(rom);
-		char* outputString = ProcessByte(currByte, rom);
+		programCounter++;
+		char* outputString = ProcessByte(currByte, rom, &programCounter);
 		OutputByte(outputString);
 	}
 
