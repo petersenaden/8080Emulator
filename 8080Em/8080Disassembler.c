@@ -84,52 +84,187 @@ char* ProcessByte(unsigned char currByte, FILE* rom, int* programCounter)
 			byte2 = GetNextByte(rom);
 			(*programCounter)++;
 			sprintf(outputString, "%-7sD,#$%02X%02X", "LXI", byte2, byte1);
-			break;//here
+			break;
 		case 0x12: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sD", "STAX");
 			break;
 		case 0x13: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sD", "INX");
 			break;
 		case 0x14: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sD", "INR");
 			break;
 		case 0x15: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sD", "DCR");
 			break;
 		case 0x16: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7sD,#$%02X", "MVI", byte1);
 			break;
 		case 0x17: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sD", "RAL");
 			break;
 		case 0x18: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "--");
 			break;
 		case 0x19: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sD", "DAD");
 			break;
 		case 0x1a: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sD", "LDAX");
 			break;
 		case 0x1b: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sD", "DCX");
 			break;
 		case 0x1c: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sE", "INR");
 			break;
 		case 0x1d: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7sE", "DCR");
 			break;
 		case 0x1e: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7sE,#$%02X", "MVI", byte1);
 			break;
 		case 0x1f: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7s", "RAR");
 			break;
 		case 0x20: 
-			sprintf(outputString, "STAX %02X", GetNextByte(rom));
+			sprintf(outputString, "%-7s", "RIM");
 			break;
+		case 0x21: 
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			byte2 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7sH,#$%02X%02X", "LXI", byte2, byte1);
+			break;
+		case 0x22: 
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			byte2 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7s", "SHLD");
+			break;
+		case 0x23: 
+			sprintf(outputString, "%-7sH", "INX");
+			break;
+		case 0x24: 
+			sprintf(outputString, "%-7sH", "INR");
+			break;
+		case 0x25: 
+			sprintf(outputString, "%-7sH", "DCR");
+			break;
+		case 0x26: 
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7sH,#$%02X", "MVI", byte1);
+			break;
+		case 0x27: 
+			sprintf(outputString, "%-7s", "DAA");
+			break;
+		case 0x28: 
+			sprintf(outputString, "%-7s", "NOP");
+			break;
+		case 0x29: 
+			sprintf(outputString, "%-7sH", "DAD");
+			break;
+		case 0x30: 
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			byte2 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7s,#$%02X%02X", "LHLD", byte2, byte1);
+			break;
+		case 0x31: 
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			byte2 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7sSP,#$%02X%02X", "LXI", byte2, byte1);
+			break;
+		case 0x32: 
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			byte2 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7s,#$%02X%02X", "STA", byte2, byte1);
+			break;
+		case 0x33: 
+			sprintf(outputString, "%-7sSP", "INX");
+			break;
+		case 0x34: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x35: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x36: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x37: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x38: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x39: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		case 0x20: 
+			sprintf(outputString, "%-7s", "RIM");
+			break;
+		
 		default:
 			sprintf(outputString, "UNKNOWN OP");
 			break;
