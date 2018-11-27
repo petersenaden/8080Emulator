@@ -196,7 +196,7 @@ char* ProcessByte(unsigned char currByte, FILE* rom, int* programCounter)
 			sprintf(outputString, "%-7sSP", "INX");
 			break;
 		case 0x34: 
-			sprintf(outputString, "%-7s", "RIM");
+			sprintf(outputString, "%-7sM", "INR");
 			break;
 		case 0x35: 
 			sprintf(outputString, "%-7s", "RIM");
