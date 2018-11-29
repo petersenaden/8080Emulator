@@ -171,35 +171,59 @@ char* ProcessByte(unsigned char currByte, FILE* rom, int* programCounter)
 		case 0x29: 
 			sprintf(outputString, "%-7sH", "DAD");
 			break;
-		case 0x30: 
+		case 0x2a: 
 			byte1 = GetNextByte(rom);
 			(*programCounter)++;
 			byte2 = GetNextByte(rom);
 			(*programCounter)++;
 			sprintf(outputString, "%-7s,#$%02X%02X", "LHLD", byte2, byte1);
 			break;
-		case 0x31: 
+		case 0x2b: 
 			byte1 = GetNextByte(rom);
 			(*programCounter)++;
 			byte2 = GetNextByte(rom);
 			(*programCounter)++;
 			sprintf(outputString, "%-7sSP,#$%02X%02X", "LXI", byte2, byte1);
 			break;
-		case 0x32: 
+		case 0x2c: 
 			byte1 = GetNextByte(rom);
 			(*programCounter)++;
 			byte2 = GetNextByte(rom);
 			(*programCounter)++;
 			sprintf(outputString, "%-7s,#$%02X%02X", "STA", byte2, byte1);
 			break;
-		case 0x33: 
+		case 0x2d: 
 			sprintf(outputString, "%-7sSP", "INX");
 			break;
-		case 0x34: 
+		case 0x2e: 
 			sprintf(outputString, "%-7sM", "INR");
 			break;
-		case 0x35: 
+		case 0x2f: 
 			sprintf(outputString, "%-7sM", "DCR");
+			break;
+		case 0x30: 
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7sM,#$%02X", "MVI", byte1);
+			break;
+		case 0x31: 
+			sprintf(outputString, "%-7s", "STC");
+			break;
+		case 0x32: 
+			sprintf(outputString, "%-7s", "NOP");
+			break;
+		case 0x33: 
+			sprintf(outputString, "%-7sSP", "DAD");
+			break;
+		case 0x34: 
+			byte1 = GetNextByte(rom);
+			(*programCounter)++;
+			byte2 = GetNextByte(rom);
+			(*programCounter)++;
+			sprintf(outputString, "%-7s,#$%02X%02X", "LDA", byte2, byte1);
+			break;
+		case 0x35: 
+			sprintf(outputString, "%-7sSP", "DCX");
 			break;
 		case 0x36: 
 			sprintf(outputString, "%-7s", "RIM");
@@ -213,55 +237,37 @@ char* ProcessByte(unsigned char currByte, FILE* rom, int* programCounter)
 		case 0x39: 
 			sprintf(outputString, "%-7s", "RIM");
 			break;
-		case 0x20: 
+		case 0x3a: 
 			sprintf(outputString, "%-7s", "RIM");
 			break;
-		case 0x20: 
+		case 0x3b: 
 			sprintf(outputString, "%-7s", "RIM");
 			break;
-		case 0x20: 
+		case 0x3c: 
 			sprintf(outputString, "%-7s", "RIM");
 			break;
-		case 0x20: 
+		case 0x3d: 
 			sprintf(outputString, "%-7s", "RIM");
 			break;
-		case 0x20: 
+		case 0x3e: 
 			sprintf(outputString, "%-7s", "RIM");
 			break;
-		case 0x20: 
+		case 0x3f: 
 			sprintf(outputString, "%-7s", "RIM");
 			break;
-		case 0x20: 
+		case 0x40: 
 			sprintf(outputString, "%-7s", "RIM");
 			break;
-		case 0x20: 
+		case 0x41: 
 			sprintf(outputString, "%-7s", "RIM");
 			break;
-		case 0x20: 
+		case 0x42: 
 			sprintf(outputString, "%-7s", "RIM");
 			break;
-		case 0x20: 
+		case 0x43: 
 			sprintf(outputString, "%-7s", "RIM");
 			break;
-		case 0x20: 
-			sprintf(outputString, "%-7s", "RIM");
-			break;
-		case 0x20: 
-			sprintf(outputString, "%-7s", "RIM");
-			break;
-		case 0x20: 
-			sprintf(outputString, "%-7s", "RIM");
-			break;
-		case 0x20: 
-			sprintf(outputString, "%-7s", "RIM");
-			break;
-		case 0x20: 
-			sprintf(outputString, "%-7s", "RIM");
-			break;
-		case 0x20: 
-			sprintf(outputString, "%-7s", "RIM");
-			break;
-		case 0x20: 
+		case 0x44: 
 			sprintf(outputString, "%-7s", "RIM");
 			break;
 		
