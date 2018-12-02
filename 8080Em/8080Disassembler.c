@@ -1,3 +1,13 @@
+/*
+From :https://www.romhacking.net/forum/index.php?topic=16663.0
+ LDA #$09
+Here, the value of 9 gets loaded into the accumulator. This is called "Immediate."
+LDA $09
+Here, whatever is being held in $09 will be loaded into the accumulator. If this is NES, this is called loading from "Zero Page." If it's SNES, it's called loading from "Direct Page." Perhaps a better example:
+LDA $0009
+This is called "Absolute." If this is SNES, and DP was set to 0000 in the previous example, both of these would load from the same location. The DP load would be slightly faster, though.
+*/
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -146,7 +156,7 @@ char* ProcessByte(unsigned char currByte, FILE* rom, int* programCounter)
 			(*programCounter)++;
 			byte2 = GetNextByte(rom);
 			(*programCounter)++;
-			sprintf(outputString, "%-7s$%02X%02X", "SHLD");
+			sprintf(outputString, "%-7s$%02X%02X", "SHLD", byte2, byte1);
 			break;
 		case 0x23: 
 			sprintf(outputString, "%-7sH", "INX");
@@ -668,7 +678,7 @@ char* ProcessByte(unsigned char currByte, FILE* rom, int* programCounter)
 			(*programCounter)++;
 			byte2 = GetNextByte(rom);
 			(*programCounter)++;
-			sprintf(outputString, "%-7s$%02X%02X", "CNZ");
+			sprintf(outputString, "%-7s$%02X%02X", "CNZ", byte2, byte1);
 			break;
 		case 0xc5:
 			sprintf(outputString, "%-7sB", "PUSH");
@@ -742,7 +752,7 @@ char* ProcessByte(unsigned char currByte, FILE* rom, int* programCounter)
 			(*programCounter)++;
 			byte2 = GetNextByte(rom);
 			(*programCounter)++;
-			sprintf(outputString, "%-7s$%02X%02X", "CNC", byte2, byte1;
+			sprintf(outputString, "%-7s$%02X%02X", "CNC", byte2, byte1);
 			break;
 		case 0xd5:
 			sprintf(outputString, "%-7sD", "PUSH");
@@ -968,7 +978,6 @@ int main(int argc, char**argv)
 			break;
 		}
 		unsigned char currByte = GetNextByte(rom);
-		programCounter++;
 		char* outputString = ProcessByte(currByte, rom, &programCounter);
 		OutputByte(outputString);
 	}
