@@ -16,4 +16,5 @@ struct StateFlags* InitializeStateFlagsStruct(struct StateFlags* sf)
 	sf->p  = 0;
 	sf->cy = 0;
 	sf->ac = 0;
+	return sf;
 }

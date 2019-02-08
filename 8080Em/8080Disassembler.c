@@ -11,9 +11,21 @@ This is called "Absolute." If this is SNES, and DP was set to 0000 in the previo
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<assert.h>
+#include<errno.h>
 #include "8080Emulation.h"
 
 unsigned char GetNextByte(FILE* rom);
+
+int fopen_safe(FILE **f, const char *name, const char *mode) {
+    int ret = 0;
+    assert(f);
+    *f = fopen(name, mode);
+    /* Can't be sure about 1-to-1 mapping of errno and MS' errno_t */
+    if (!*f)
+        ret = errno;
+    return ret;
+}
 
 void OutputByte(char* outputString)
 {
@@ -943,13 +955,15 @@ char* ProcessByte(unsigned char currByte, FILE* rom, int* programCounter)
 			break;
 	}
 	(*programCounter)++;
-	strncat_s(programCounterPrefixString, 200, outputString, 100);
+	strncat(programCounterPrefixString, outputString, 100);
+	programCounterPrefixString[199] = '\0';
+	//strncat_s(programCounterPrefixString, 200, outputString, 100);
 	return programCounterPrefixString;
 }	
 
 unsigned char GetNextByte(FILE* rom)
 {
-	unsigned char returnVar;
+	unsigned char returnVar = 0;
 	if (feof(rom))
 	{
 		return returnVar;
@@ -961,16 +975,17 @@ unsigned char GetNextByte(FILE* rom)
 
 int main(int argc, char**argv)
 {
-	int fileSizeInChars = 0;
+	// avoids compiler warning
+	(void)argc;
 	int programCounter = 0;
 	FILE* rom;
-	if (fopen_s(&rom, argv[1], "rb") != 0)
+	if (fopen_safe(&rom, argv[1], "rb") != 0)
 	{
 		exit(EXIT_FAILURE);
 	}
 	
 	fseek(rom, 0, SEEK_END);
-	fileSizeInChars = ftell(rom);
+	//ftell(rom);
 	fseek(rom, 0, SEEK_SET);
 	for(;;)
 	{
