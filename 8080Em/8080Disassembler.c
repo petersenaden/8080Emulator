@@ -13,7 +13,6 @@ This is called "Absolute." If this is SNES, and DP was set to 0000 in the previo
 #include<string.h>
 #include<assert.h>
 #include<errno.h>
-#include "8080Emulation.h"
 
 unsigned char GetNextByte(FILE* rom);
 

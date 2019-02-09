@@ -9,10 +9,10 @@ all: mainBuild clean
 mainBuild: 8080Disassembler.o 8080Emulation.o
 	$(CCom) $(CFlags) $(OutputFile) 8080Disassembler.o 8080Emulation.o
 
-8080Disassembler.o: 8080Disassembler.c 8080Emulation.h
+8080Disassembler.o: 8080Disassembler.c
 	$(CCom) $(CFlags) -c 8080Disassembler.c
 	
-8080Emulation.o: 8080Emulation.c
+8080Emulation.o: 8080Emulation.c 8080Emulation.h
 	$(CCom) $(CFlags) -c 8080Emulation.c
 
 clean:
