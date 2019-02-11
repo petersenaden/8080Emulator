@@ -1,13 +1,13 @@
 #include<stdlib.h>
+#ifndef EMULATION8080
+#define EMULATION8080
+#include "8080Emulation.h"
+#endif
 
-struct StateFlags 
-{
-	char z;
-	char s;
-	char p;
-	char cy;
-	char ac;
-};
+#ifndef INSTRUCTIONSET8080
+#define INSTRUCTIONSET8080
+#include "8080InstructionSet.h"
+#endif
 
 struct StateFlags* InitializeStateFlagsStruct(struct StateFlags *sf)
 {
@@ -18,22 +18,6 @@ struct StateFlags* InitializeStateFlagsStruct(struct StateFlags *sf)
 	sf->ac = 0;
 	return sf;
 }
-
-struct State8080
-{
-	unsigned char a;
-	unsigned char b;
-	unsigned char c;
-	unsigned char d;
-	unsigned char e;
-	unsigned char h;
-	unsigned char l;
-	unsigned short interrupt_enable;
-	unsigned short sp;
-	unsigned short pc;
-	unsigned char* memory;
-	struct StateFlags sf;
-};
 
 struct State8080* Initialize8080StateStruct(struct State8080 *st)
 {
@@ -47,41 +31,30 @@ struct State8080* Initialize8080StateStruct(struct State8080 *st)
 	st->interrupt_enable = 0;
 	st->sp = 0;
 	st->pc = 0;
-	st->memory = malloc(sizeof(unsigned char) * 16000);
+	st->memory = calloc(16000, sizeof(unsigned char));
 	InitializeStateFlagsStruct(&(st->sf));
 	return st;
 }
 
-void UnimplementedInstruction(struct State8080* stt)
-{
-	(stt->pc)--;
-	// FIXME: sp might need to be reversed
-	// FIXME: output to log file
-	exit(1);
-}
-
-void DoThingBasedOffState(struct State8080 *stt)
+void Execute8080Op(struct State8080 *stt)
 {
 	unsigned char *currOp = &(stt->memory[stt->pc]);
 	switch (*currOp)
 	{
 		case 0x00:								  break; // NOP
 		case 0x01: 										 // LXI B,D16
-			stt->b = currOp[2];
-			stt->c = currOp[1];
-			stt->pc++;
-			stt->pc++;
+			LXIInstruction(stt, &(stt->b), &(stt->c));
 			break;
 		case 0x02: 										 // STAX B
 		{
-			unsigned short int addressToUse = 0;
-			addressToUse = stt->b;
-			addressToUse = addressToUse << 8;
-			addressToUse += stt->c;
-			stt->a = stt->memory[addressToUse];
+			STAXInstruction(stt, &(stt->b), &(stt->c), &(stt->a));
 			break;
 		}
-		case 0x03: UnimplementedInstruction(stt); break;
+		case 0x03: 										 // INX B
+		{
+			INXInstruction(&(stt->b), &(stt->c));
+			break;
+		}
 		case 0x04: UnimplementedInstruction(stt); break;
 		case 0x05: UnimplementedInstruction(stt); break;
 		case 0x06: UnimplementedInstruction(stt); break;

@@ -6,14 +6,17 @@ OutputFile = -o 8080Emu
 #targets
 all: mainBuild clean
 
-mainBuild: 8080Disassembler.o 8080Emulation.o
-	$(CCom) $(CFlags) $(OutputFile) 8080Disassembler.o 8080Emulation.o
+mainBuild: 8080Disassembler.o 8080Emulation.o 8080InstructionSet.o
+	$(CCom) $(CFlags) $(OutputFile) 8080Disassembler.o 8080Emulation.o 8080InstructionSet.o
 
 8080Disassembler.o: 8080Disassembler.c
 	$(CCom) $(CFlags) -c 8080Disassembler.c
 	
 8080Emulation.o: 8080Emulation.c 8080Emulation.h
 	$(CCom) $(CFlags) -c 8080Emulation.c
+	
+8080InstructionSet.o: 8080InstructionSet.c 8080InstructionSet.h
+	$(CCom) $(CFlags) -c 8080InstructionSet.c
 
 clean:
-	rm -f 8080Emulation.o 8080Disassembler.o
+	rm -f 8080Emulation.o 8080Disassembler.o 8080InstructionSet.o
