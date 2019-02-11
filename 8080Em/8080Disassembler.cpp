@@ -36,9 +36,9 @@ char* ProcessByte(unsigned char currByte, FILE* rom, int* programCounter)
 	// [] notation only stays on stack for duration of function
 	unsigned char byte1;
 	unsigned char byte2;
-	char *programCounterPrefixString = malloc(200 * sizeof(char));
+	char *programCounterPrefixString = (char*)(malloc(200 * sizeof(char)));
 	sprintf(programCounterPrefixString, "%04x ", *programCounter);
-	char *outputString = malloc(100 * sizeof(char));
+	char *outputString = (char*)(malloc(100 * sizeof(char)));
 	switch(currByte)
 	{
 		case 0x00: 

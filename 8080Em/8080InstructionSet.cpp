@@ -13,6 +13,26 @@ void UnimplementedInstruction(struct State8080* stt)
 	exit(1);
 }
 
+void CheckFlags(unsigned char* resultByte, bool checkCarryFlag, bool checkACFlag, bool checkSignFlag, bool checkZeroFlag, bool checkParityFlag)
+{
+	if (checkCarryFlag)
+	{
+	}
+	if (checkACFlag)
+	{
+	}
+	if (checkSignFlag)
+	{
+	}
+	if (checkZeroFlag)
+	{
+	}
+	if (checkParityFlag)
+	{
+	}
+	
+}
+
 void LXIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
 {
 	unsigned char *currOperation = &(stt->memory[stt->pc]);
@@ -45,7 +65,8 @@ void INXInstruction(unsigned char* byteOne, unsigned char* byteTwo)
 
 void INRInstruction(unsigned char* byteOne)
 {
-	
+	(*byteOne)++;
+	CheckFlags
 	
 }
 

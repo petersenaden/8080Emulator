@@ -31,7 +31,7 @@ struct State8080* Initialize8080StateStruct(struct State8080 *st)
 	st->interrupt_enable = 0;
 	st->sp = 0;
 	st->pc = 0;
-	st->memory = calloc(16000, sizeof(unsigned char));
+	st->memory = (unsigned char*)(calloc(16000, sizeof(unsigned char)));
 	InitializeStateFlagsStruct(&(st->sf));
 	return st;
 }
