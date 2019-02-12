@@ -1,4 +1,5 @@
 #include<stdlib.h>
+#include<limits.h>
 
 #ifndef INSTRUCTIONSET8080
 #define INSTRUCTIONSET8080
@@ -13,22 +14,37 @@ void UnimplementedInstruction(struct State8080* stt)
 	exit(1);
 }
 
-void CheckFlags(unsigned char* resultByte, bool checkCarryFlag, bool checkACFlag, bool checkSignFlag, bool checkZeroFlag, bool checkParityFlag)
+/* 
+  To avoid dereferencing a null pointer, we'll just keep the secondByte to be a value variable.
+  Also, I'm impelmenting the AC and C flags by hand because implementing the instructions here
+  would cause double the work for virtually every operation.
+ */
+void CheckFlags(struct State8080* stt, unsigned char checkByte, bool checkSignFlag, bool checkZeroFlag, bool checkParityFlag)
 {
-	if (checkCarryFlag)
-	{
-	}
-	if (checkACFlag)
-	{
-	}
+	//(n >> k) & 1
 	if (checkSignFlag)
 	{
+		//check this for bit 7
+		if ((((checkByte) >> 7) & 1) == 1)
+		{
+			stt->sf.s = 1;
+		}
 	}
 	if (checkZeroFlag)
 	{
+		stt->sf.z = (checkByte == 0);
 	}
 	if (checkParityFlag)
 	{
+		int totalOdds = 0;
+		for (unsigned int i = 0; i < (sizeof(checkByte) * 8); i++)
+		{
+			if ((((checkByte) >> i) & 1) == 1)
+			{
+				totalOdds++;
+			}
+		}
+		stt->sf.p = (totalOdds % 2 == 1);
 	}
 	
 }
@@ -53,7 +69,7 @@ void STAXInstruction(struct State8080* stt, unsigned char* byteOne, unsigned cha
 
 void INXInstruction(unsigned char* byteOne, unsigned char* byteTwo)
 {
-	// check endianness
+	// FIXME: check endianness
 	unsigned short int addressToUse = 0;
 	addressToUse = (unsigned short int)(*byteOne);
 	addressToUse = (unsigned short int)(addressToUse << 8);
@@ -63,11 +79,29 @@ void INXInstruction(unsigned char* byteOne, unsigned char* byteTwo)
 	(*byteTwo) = (unsigned char)(addressToUse >> 8);
 }
 
-void INRInstruction(unsigned char* byteOne)
+// Probably busted based on the AC flag
+void INRInstruction(struct State8080* stt, unsigned char* byteOne)
 {
-	(*byteOne)++;
-	CheckFlags
-	
+	byteOne++;
+	CheckFlags(stt, (*byteOne), true, true, true);
+	// Carry flag
+	if (byteOne == 0)
+	{
+		stt->sf.cy = 1;
+	}
+	bool flipACFlag = true;
+	// check endianness
+	for (unsigned int i = 0; i < 4; i++)
+	{
+			if ((((*byteOne) >> i) & 1) != 1)
+			{
+				flipACFlag = false;
+			}
+	}
+	if (flipACFlag)
+	{
+		stt->sf.ac = 1;
+	}
 }
 
 
