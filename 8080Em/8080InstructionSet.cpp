@@ -82,10 +82,10 @@ void INXInstruction(unsigned char* byteOne, unsigned char* byteTwo)
 // Probably busted based on the AC flag
 void INRInstruction(struct State8080* stt, unsigned char* byteOne)
 {
-	byteOne++;
+	(*byteOne)++;
 	CheckFlags(stt, (*byteOne), true, true, true);
 	// Carry flag
-	if (byteOne == 0)
+	if ((*byteOne) == 0)
 	{
 		stt->sf.cy = 1;
 	}
@@ -104,6 +104,30 @@ void INRInstruction(struct State8080* stt, unsigned char* byteOne)
 	}
 }
 
+void DCRInstruction(struct State8080* stt, unsigned char* byteOne)
+{
+	// Carry flag
+	if (1 > (*byteOne))
+	{
+		stt->sf.cy = 1;
+	}
+	(*byteOne)--;
+	CheckFlags(stt, (*byteOne), true, true, true);
+	// check endianness
+	// Only way AC can be set if is LS 4 bits are zero. 
+	bool flipACFlag = true;
+	for (unsigned int i = 0; i < 4; i++)
+	{
+			if ((((*byteOne) >> i) & 1) != 0)
+			{
+				flipACFlag = false;
+			}
+	}
+	if (flipACFlag)
+	{
+		stt->sf.ac = 1;
+	}
+}
 
 
 
