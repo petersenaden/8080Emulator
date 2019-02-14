@@ -64,19 +64,19 @@ void STAXInstruction(struct State8080* stt, unsigned char* byteOne, unsigned cha
 	addressToUse = (unsigned short int)(*byteOne);
 	addressToUse = (unsigned short int)(addressToUse << 8);
 	addressToUse = (unsigned short int)(addressToUse + (*byteTwo));
-	*destByte = stt->memory[addressToUse];
+	(stt->memory[addressToUse]) = (*destByte);
 }
 
 void INXInstruction(unsigned char* byteOne, unsigned char* byteTwo)
 {
 	// FIXME: check endianness
-	unsigned short int addressToUse = 0;
-	addressToUse = (unsigned short int)(*byteOne);
-	addressToUse = (unsigned short int)(addressToUse << 8);
-	addressToUse = (unsigned short int)(addressToUse + (*byteTwo));
-	addressToUse++;
-	(*byteOne) = (unsigned char)(addressToUse & 0xFF);
-	(*byteTwo) = (unsigned char)(addressToUse >> 8);
+	unsigned short int numberToUse = 0;
+	numberToUse = (unsigned short int)(*byteOne);
+	numberToUse = (unsigned short int)(numberToUse << 8);
+	numberToUse = (unsigned short int)(numberToUse + (*byteTwo));
+	numberToUse++;
+	(*byteOne) = (unsigned char)(numberToUse & 0xFF);
+	(*byteTwo) = (unsigned char)(numberToUse >> 8);
 }
 
 // Probably busted based on the AC flag
@@ -129,6 +129,73 @@ void DCRInstruction(struct State8080* stt, unsigned char* byteOne)
 	}
 }
 
+void MVIInstruction(struct State8080* stt, unsigned char* byteOne)
+{
+	unsigned char *currOperation = &(stt->memory[stt->pc]);
+	*byteOne = currOperation[1];
+	stt->pc++;
+}
+
+void RLCInstruction(struct State8080* stt, unsigned char* byteOne)
+{
+	unsigned char seventhBit = (((*byteOne) >> 7) & 1);
+	(*byteOne) = (unsigned char)((*byteOne) << 1);
+	(*byteOne) = (*byteOne) | seventhBit;
+	stt->sf.cy = seventhBit;
+}
+
+void DADInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree, unsigned char* byteFour)
+{
+	// might have promotion issues
+	unsigned short int firstCompositeRegister = 0;
+	firstCompositeRegister = (unsigned short int)(*byteOne);
+	firstCompositeRegister = (unsigned short int)(firstCompositeRegister << 8);
+	firstCompositeRegister = (unsigned short int)(firstCompositeRegister + (*byteTwo));
+	
+	unsigned short int secondCompositeRegister = 0;
+	secondCompositeRegister = (unsigned short int)(*byteThree);
+	secondCompositeRegister = (unsigned short int)(secondCompositeRegister << 8);
+	secondCompositeRegister = (unsigned short int)(secondCompositeRegister + (*byteFour));
+	
+	unsigned short additiveResult = (unsigned short )(firstCompositeRegister + secondCompositeRegister);
+	(*byteTwo) = (unsigned char)(additiveResult & 0b1111);
+	(*byteOne) = (unsigned char)(additiveResult >> 4);
+	
+	int carryCheck = firstCompositeRegister + secondCompositeRegister;
+	if (carryCheck > USHRT_MAX)
+	{
+		stt->sf.cy = (carryCheck > USHRT_MAX);
+	}
+}
+
+void LDAXInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* destByte)
+{
+	unsigned short int addressToUse = 0;
+	addressToUse = (unsigned short int)(*byteOne);
+	addressToUse = (unsigned short int)(addressToUse << 8);
+	addressToUse = (unsigned short int)(addressToUse + (*byteTwo));
+	*destByte = stt->memory[addressToUse];
+}
+
+void DCXInstruction(unsigned char* byteOne, unsigned char* byteTwo)
+{
+	// FIXME: check endianness
+	unsigned short int numberToUse = 0;
+	numberToUse = (unsigned short int)(*byteOne);
+	numberToUse = (unsigned short int)(numberToUse << 8);
+	numberToUse = (unsigned short int)(numberToUse + (*byteTwo));
+	numberToUse--;
+	(*byteOne) = (unsigned char)(numberToUse & 0xFF);
+	(*byteTwo) = (unsigned char)(numberToUse >> 8);
+}
+
+void RRCInstruction(struct State8080* stt, unsigned char* byteOne)
+{
+	unsigned char zeroBit = ((*byteOne) & 1);
+	stt->sf.cy = zeroBit;
+	(*byteOne) = (unsigned char)((*byteOne) >> 1);
+	(*byteOne) = (*byteOne) & ((unsigned char)(zeroBit << 7));
+}
 
 
 
