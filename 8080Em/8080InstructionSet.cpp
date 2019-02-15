@@ -197,6 +197,14 @@ void RRCInstruction(struct State8080* stt, unsigned char* byteOne)
 	(*byteOne) = (*byteOne) & ((unsigned char)(zeroBit << 7));
 }
 
+void RALInstruction(struct State8080* stt, unsigned char* byteOne)
+{
+	unsigned char seventhBit = (((*byteOne) >> 7) & 1);
+	(*byteOne) = (unsigned char)((*byteOne) << 1);
+	(*byteOne) = (unsigned char)((*byteOne) | stt->sf.cy);
+	stt->sf.cy = seventhBit;
+}
+
 
 
 
