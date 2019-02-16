@@ -55,20 +55,68 @@ void Execute8080Op(struct State8080 *stt)
 			INXInstruction(&(stt->b), &(stt->c));
 			break;
 		}
-		case 0x04: UnimplementedInstruction(stt); break;
-		case 0x05: UnimplementedInstruction(stt); break;
-		case 0x06: UnimplementedInstruction(stt); break;
-		case 0x07: UnimplementedInstruction(stt); break;
+		case 0x04: 
+		{		
+			INRInstruction(stt, &(stt->b));
+			break;
+		}
+		case 0x05: 
+		{		
+			DCRInstruction(stt, &(stt->b));
+			break;
+		}
+		case 0x06: 
+		{		
+			MVIInstruction(stt, &(stt->b));
+			break;
+		}
+		case 0x07: 
+		{		
+			RLCInstruction(stt, &(stt->a));
+			break;
+		}
 		case 0x08: UnimplementedInstruction(stt); break;
-		case 0x09: UnimplementedInstruction(stt); break;
-		case 0x0a: UnimplementedInstruction(stt); break;
-		case 0x0b: UnimplementedInstruction(stt); break;
-		case 0x0c: UnimplementedInstruction(stt); break;
-		case 0x0d: UnimplementedInstruction(stt); break;
-		case 0x0e: UnimplementedInstruction(stt); break;
-		case 0x0f: UnimplementedInstruction(stt); break;
+		case 0x09: 
+		{		
+			DADInstruction(stt, &(stt->h), &(stt->l), &(stt->b), &(stt->c));
+			break;
+		}
+		case 0x0a: 
+		{		
+			LDAXInstruction(stt, &(stt->b), &(stt->c), &(stt->a));
+			break;
+		}
+		case 0x0b: 
+		{		
+			DCXInstruction(&(stt->b), &(stt->c));
+			break;
+		}
+		case 0x0c: 
+		{		
+			INRInstruction(stt, &(stt->c));
+			break;
+		}
+		case 0x0d: 
+		{		
+			DCRInstruction(stt, &(stt->c));
+			break;
+		}
+		case 0x0e: 
+		{		
+			MVIInstruction(stt, &(stt->c));
+			break;
+		}
+		case 0x0f: 
+		{		
+			RRCInstruction(stt, &(stt->a));
+			break;
+		}
 		case 0x10: UnimplementedInstruction(stt); break;
-		case 0x11: UnimplementedInstruction(stt); break;
+		case 0x11: 
+		{		
+			LXIInstruction(stt, &(stt->d), &(stt->e));
+			break;
+		}
 		case 0x12: UnimplementedInstruction(stt); break;
 		case 0x13: UnimplementedInstruction(stt); break;
 		case 0x14: UnimplementedInstruction(stt); break;

@@ -1,5 +1,6 @@
 #include<stdlib.h>
 #include<limits.h>
+#include<stdio.h>
 
 #ifndef INSTRUCTIONSET8080
 #define INSTRUCTIONSET8080
@@ -205,8 +206,65 @@ void RALInstruction(struct State8080* stt, unsigned char* byteOne)
 	stt->sf.cy = seventhBit;
 }
 
+void RARInstruction(struct State8080* stt, unsigned char* byteOne)
+{
+	unsigned char seventhBit = (((*byteOne) >> 7) & 1);
+	unsigned char zeroBit = ((*byteOne) & 1);
+	(*byteOne) = (unsigned char)((*byteOne) >> 1);
+	(*byteOne) = (*byteOne) & ((unsigned char)(seventhBit << 7));
+	stt->sf.cy = zeroBit;
+}
 
+void DAAInstruction()
+{
+	printf("Unimplemented Instruction - DAA");
+	exit(0);
+}
 
+void SHLDInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* destByteOne, unsigned char* destByteTwo)
+{
+	unsigned short int addressToUse = 0;
+	addressToUse = (unsigned short int)(*byteOne);
+	addressToUse = (unsigned short int)(addressToUse << 8);
+	addressToUse = (unsigned short int)(addressToUse + (*byteTwo));
+	*destByteOne = stt->memory[addressToUse];
+	*destByteTwo = stt->memory[addressToUse + 1];
+	(stt->pc)++;
+	(stt->pc)++;
+}
+
+void LHLDInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* destByteOne, unsigned char* destByteTwo)
+{
+	unsigned short int addressToUse = 0;
+	addressToUse = (unsigned short int)(*byteOne);
+	addressToUse = (unsigned short int)(addressToUse << 8);
+	addressToUse = (unsigned short int)(addressToUse + (*byteTwo));
+	*destByteOne = stt->memory[addressToUse];
+	*destByteTwo = stt->memory[addressToUse + 1];
+	(stt->pc)++;
+	(stt->pc)++;
+}
+
+void CMAInstruction(unsigned char* byteOne)
+{
+	// might be wrong
+	(*byteOne) = (unsigned char)(~(*byteOne));
+}
+
+void STCInstruction(struct State8080* stt)
+{
+	stt->sf.cy = 1;
+}
+
+void CMCInstruction(struct State8080* stt)
+{
+	stt->sf.cy = !(stt->sf.cy);
+}
+
+void MOVInstruction(unsigned char* byteOne, unsigned char* byteTwo)
+{
+	(*byteOne) = (*byteTwo);
+}
 
 
 
