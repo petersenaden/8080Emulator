@@ -117,7 +117,11 @@ void Execute8080Op(struct State8080 *stt)
 			LXIInstruction(stt, &(stt->d), &(stt->e));
 			break;
 		}
-		case 0x12: UnimplementedInstruction(stt); break;
+		case 0x12: 
+		{		
+			STAXInstruction(stt, &(stt->d), &(stt->e), &(stt->a));
+			break;
+		}
 		case 0x13: UnimplementedInstruction(stt); break;
 		case 0x14: UnimplementedInstruction(stt); break;
 		case 0x15: UnimplementedInstruction(stt); break;
