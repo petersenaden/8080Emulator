@@ -122,22 +122,80 @@ void Execute8080Op(struct State8080 *stt)
 			STAXInstruction(stt, &(stt->d), &(stt->e), &(stt->a));
 			break;
 		}
-		case 0x13: UnimplementedInstruction(stt); break;
-		case 0x14: UnimplementedInstruction(stt); break;
-		case 0x15: UnimplementedInstruction(stt); break;
-		case 0x16: UnimplementedInstruction(stt); break;
-		case 0x17: UnimplementedInstruction(stt); break;
+		case 0x13: 
+		{		
+			INXInstruction(&(stt->d), &(stt->e));
+			break;
+		}
+		case 0x14: 
+		{		
+			INRInstruction(stt, &(stt->d));
+			break;
+		}
+		case 0x15: 
+		{		
+			DCRInstruction(stt, &(stt->d));
+			break;
+		}
+		case 0x16: 
+		{		
+			MVIInstruction(stt, &(stt->d));
+			break;
+		}
+		case 0x17: 
+		{		
+			RALInstruction(stt, &(stt->a));
+			break;
+		}
 		case 0x18: UnimplementedInstruction(stt); break;
-		case 0x19: UnimplementedInstruction(stt); break;
-		case 0x1a: UnimplementedInstruction(stt); break;
-		case 0x1b: UnimplementedInstruction(stt); break;
-		case 0x1c: UnimplementedInstruction(stt); break;
-		case 0x1d: UnimplementedInstruction(stt); break;
-		case 0x1e: UnimplementedInstruction(stt); break;
-		case 0x1f: UnimplementedInstruction(stt); break;
+		case 0x19: 
+		{		
+			DADInstruction(stt, &(stt->h), &(stt->l), &(stt->d), &(stt->e));
+			break;
+		}
+		case 0x1a: 
+		{		
+			LDAXInstruction(stt, &(stt->d), &(stt->e), &(stt->a));
+			break;
+		}
+		case 0x1b: 
+		{		
+			DCXInstruction(&(stt->d), &(stt->e));
+			break;
+		}
+		case 0x1c: 
+		{		
+			INRInstruction(stt, &(stt->e));
+			break;
+		}
+		case 0x1d:
+		{
+			DCRInstruction(stt, &(stt->e));
+			break;
+		}
+		case 0x1e:
+		{
+			MVIInstruction(stt, &(stt->e));
+			break;
+		}
+		case 0x1f:
+		{
+			RARInstruction(stt, &(stt->a));
+			break;
+		}
 		case 0x20: UnimplementedInstruction(stt); break;
-		case 0x21: UnimplementedInstruction(stt); break;
-		case 0x22: UnimplementedInstruction(stt); break;
+		case 0x21:
+		{
+			LXIInstruction(stt, &(stt->h), &(stt->l));
+			break;
+		}
+		case 0x22:
+		{
+			// Build the address into the instruction by incrementing the stack pointer twice and 
+			// using the resulting two bytes to dump the byte into.
+			//SHLDInstruction(stt, &(stt->h), &(stt->l));
+			break;
+		}
 		case 0x23: UnimplementedInstruction(stt); break;
 		case 0x24: UnimplementedInstruction(stt); break;
 		case 0x25: UnimplementedInstruction(stt); break;

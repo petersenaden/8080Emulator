@@ -25,3 +25,4 @@ void CMAInstruction(unsigned char* byteOne);
 void STCInstruction(struct State8080* stt);
 void CMCInstruction(struct State8080* stt);
 void MOVInstruction(unsigned char* byteOne, unsigned char* byteTwo);
+void RALInstruction(struct State8080* stt, unsigned char* byteOne);
