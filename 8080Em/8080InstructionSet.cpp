@@ -221,24 +221,26 @@ void DAAInstruction()
 	exit(0);
 }
 
-void SHLDInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* destByteOne, unsigned char* destByteTwo)
+void SHLDInstruction(struct State8080* stt, unsigned char* destByteOne, unsigned char* destByteTwo)
 {
+	unsigned char *currOperation = &(stt->memory[stt->pc]);
 	unsigned short int addressToUse = 0;
-	addressToUse = (unsigned short int)(*byteOne);
+	addressToUse = (unsigned short int)(*(currOperation + 1));
 	addressToUse = (unsigned short int)(addressToUse << 8);
-	addressToUse = (unsigned short int)(addressToUse + (*byteTwo));
+	addressToUse = (unsigned short int)(addressToUse + (*(currOperation + 2)));
 	*destByteOne = stt->memory[addressToUse];
 	*destByteTwo = stt->memory[addressToUse + 1];
 	(stt->pc)++;
 	(stt->pc)++;
 }
 
-void LHLDInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* destByteOne, unsigned char* destByteTwo)
+void LHLDInstruction(struct State8080* stt, unsigned char* destByteOne, unsigned char* destByteTwo)
 {
+	unsigned char *currOperation = &(stt->memory[stt->pc]);
 	unsigned short int addressToUse = 0;
-	addressToUse = (unsigned short int)(*byteOne);
+	addressToUse = (unsigned short int)(*(currOperation + 1));
 	addressToUse = (unsigned short int)(addressToUse << 8);
-	addressToUse = (unsigned short int)(addressToUse + (*byteTwo));
+	addressToUse = (unsigned short int)(addressToUse + (*(currOperation + 2)));
 	*destByteOne = stt->memory[addressToUse];
 	*destByteTwo = stt->memory[addressToUse + 1];
 	(stt->pc)++;
@@ -266,6 +268,101 @@ void MOVInstruction(unsigned char* byteOne, unsigned char* byteTwo)
 	(*byteOne) = (*byteTwo);
 }
 
+void STAInstruction(struct State8080* stt, unsigned char* byteOne)
+{
+	unsigned char *currOperation = &(stt->memory[stt->pc]);
+	unsigned short int addressToUse = 0;
+	addressToUse = (unsigned short int)(*(currOperation + 1));
+	addressToUse = (unsigned short int)(addressToUse << 8);
+	addressToUse = (unsigned short int)(addressToUse + (*(currOperation + 2)));
+	stt->memory[addressToUse] = (*byteOne);
+	(stt->pc)++;
+	(stt->pc)++;
+}
+
+void INRMInstruction(struct State8080* stt)
+{
+	unsigned short int addressToUse = 0;
+	addressToUse = (unsigned short int)(stt->h);
+	addressToUse = (unsigned short int)(addressToUse << 8);
+	addressToUse = (unsigned short int)(addressToUse + (stt->l));
+	unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+	++(*charToManipulate);
+	CheckFlags(stt, (*charToManipulate), true, true, true);
+	// Carry flag
+	if ((*charToManipulate) == 0)
+	{
+		stt->sf.cy = 1;
+	}
+	bool flipACFlag = true;
+	// check endianness
+	for (unsigned int i = 0; i < 4; i++)
+	{
+			if ((((*charToManipulate) >> i) & 1) != 1)
+			{
+				flipACFlag = false;
+			}
+	}
+	if (flipACFlag)
+	{
+		stt->sf.ac = 1;
+	}
+}
+
+void DCRMInstruction(struct State8080* stt)
+{
+	unsigned short int addressToUse = 0;
+	addressToUse = (unsigned short int)(stt->h);
+	addressToUse = (unsigned short int)(addressToUse << 8);
+	addressToUse = (unsigned short int)(addressToUse + (stt->l));
+	unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+	--(*charToManipulate);
+	CheckFlags(stt, (*charToManipulate), true, true, true);
+	// Carry flag
+	if ((*charToManipulate) == 0)
+	{
+		stt->sf.cy = 1;
+	}
+	bool flipACFlag = true;
+	// check endianness
+	for (unsigned int i = 0; i < 4; i++)
+	{
+			if ((((*charToManipulate) >> i) & 1) != 1)
+			{
+				flipACFlag = false;
+			}
+	}
+	if (flipACFlag)
+	{
+		stt->sf.ac = 1;
+	}
+}
+
+void MVIMInstruction(struct State8080* stt)
+{
+	unsigned short int addressToUse = 0;
+	addressToUse = (unsigned short int)(stt->h);
+	addressToUse = (unsigned short int)(addressToUse << 8);
+	addressToUse = (unsigned short int)(addressToUse + (stt->l));
+	unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+	unsigned char charToPersist = stt->memory[stt->pc + 1];
+	*(charToManipulate) = charToPersist;
+	stt->pc++;
+}
+
+void LDAInstruction(struct State8080* stt)
+{
+	unsigned char highByteAddress = stt->memory[stt->sp + 1];
+	unsigned char lowByteAddress = stt->memory[stt->sp + 2];
+	unsigned short int addressToUse = 0;
+	addressToUse = (unsigned short int)(highByteAddress);
+	addressToUse = (unsigned short int)(addressToUse << 8);
+	addressToUse = (unsigned short int)(addressToUse + (lowByteAddress));
+	unsigned char charToManipulate = stt->memory[addressToUse];
+	stt->a = charToManipulate;
+	stt->pc++;
+	stt->pc++;
+}
 
 
 

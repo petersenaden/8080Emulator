@@ -191,47 +191,186 @@ void Execute8080Op(struct State8080 *stt)
 		}
 		case 0x22:
 		{
-			// Build the address into the instruction by incrementing the stack pointer twice and 
-			// using the resulting two bytes to dump the byte into.
-			//SHLDInstruction(stt, &(stt->h), &(stt->l));
+			SHLDInstruction(stt, &(stt->h), &(stt->l));
 			break;
 		}
-		case 0x23: UnimplementedInstruction(stt); break;
-		case 0x24: UnimplementedInstruction(stt); break;
-		case 0x25: UnimplementedInstruction(stt); break;
-		case 0x26: UnimplementedInstruction(stt); break;
-		case 0x27: UnimplementedInstruction(stt); break;
+		case 0x23: 
+		{		
+			INXInstruction(&(stt->h), &(stt->l));
+			break;
+		}
+		case 0x24: 
+		{		
+			INRInstruction(stt, &(stt->h));
+			break;
+		}
+		case 0x25: 
+		{		
+			DCRInstruction(stt, &(stt->h));
+			break;
+		}
+		case 0x26: 
+		{		
+			MVIInstruction(stt, &(stt->h));
+			break;
+		}
+		case 0x27: 
+		{		
+			DAAInstruction();
+			break;
+		}
 		case 0x28: UnimplementedInstruction(stt); break;
-		case 0x29: UnimplementedInstruction(stt); break;
-		case 0x2a: UnimplementedInstruction(stt); break;
-		case 0x2b: UnimplementedInstruction(stt); break;
-		case 0x2c: UnimplementedInstruction(stt); break;
-		case 0x2d: UnimplementedInstruction(stt); break;
-		case 0x2e: UnimplementedInstruction(stt); break;
-		case 0x2f: UnimplementedInstruction(stt); break;
+		case 0x29: 
+		{		
+			// This could very easily be wrong
+			DADInstruction(stt, &(stt->h), &(stt->l), &(stt->h), &(stt->l));
+			break;
+		}
+		case 0x2a: 
+		{	
+			LHLDInstruction(stt, &(stt->l), &(stt->h));
+			break;
+		}
+		case 0x2b: 
+		{		
+			DCXInstruction(&(stt->h), &(stt->l));
+			break;
+		}
+		case 0x2c: 
+		{		
+			INRInstruction(stt, &(stt->l));
+			break;
+		}
+		case 0x2d: 
+		{		
+			DCRInstruction(stt, &(stt->l));
+			break;
+		}
+		case 0x2e: 
+		{		
+			MVIInstruction(stt, &(stt->l));
+			break;
+		}
+		case 0x2f: 
+		{		
+			CMAInstruction(&(stt->l));
+			break;
+		}
 		case 0x30: UnimplementedInstruction(stt); break;
-		case 0x31: UnimplementedInstruction(stt); break;
-		case 0x32: UnimplementedInstruction(stt); break;
-		case 0x33: UnimplementedInstruction(stt); break;
-		case 0x34: UnimplementedInstruction(stt); break;
-		case 0x35: UnimplementedInstruction(stt); break;
-		case 0x36: UnimplementedInstruction(stt); break;
-		case 0x37: UnimplementedInstruction(stt); break;
+		case 0x31: 
+		{
+			unsigned char* sPHighByte = (unsigned char*)(&(stt->sp));
+			unsigned char* sPLowByte = ((unsigned char*)(&(stt->sp))) + 1;
+			LXIInstruction(stt, sPHighByte, sPLowByte);
+			break;
+		}
+		case 0x32: 
+		{		
+			STAInstruction(stt, &(stt->a));
+			break;
+		}
+		case 0x33:  
+		{		
+			unsigned char* sPHighByte = (unsigned char*)(&(stt->sp));
+			unsigned char* sPLowByte = ((unsigned char*)(&(stt->sp))) + 1;
+			INXInstruction(sPHighByte, sPLowByte);
+			break;
+		}
+		case 0x34: 
+		{		
+			INRMInstruction(stt);
+			break;
+		}
+		case 0x35: 
+		{		
+			DCRMInstruction(stt);
+			break;
+		}
+		case 0x36: 
+		{		
+			MVIMInstruction(stt);
+			break;
+		}
+		case 0x37: 
+		{		
+			STCInstruction(stt);
+			break;
+		}
 		case 0x38: UnimplementedInstruction(stt); break;
-		case 0x39: UnimplementedInstruction(stt); break;
-		case 0x3a: UnimplementedInstruction(stt); break;
-		case 0x3b: UnimplementedInstruction(stt); break;
-		case 0x3c: UnimplementedInstruction(stt); break;
-		case 0x3d: UnimplementedInstruction(stt); break;
-		case 0x3e: UnimplementedInstruction(stt); break;
-		case 0x3f: UnimplementedInstruction(stt); break;
-		case 0x40: UnimplementedInstruction(stt); break;
-		case 0x41: UnimplementedInstruction(stt); break;
-		case 0x42: UnimplementedInstruction(stt); break;
-		case 0x43: UnimplementedInstruction(stt); break;
-		case 0x44: UnimplementedInstruction(stt); break;
-		case 0x45: UnimplementedInstruction(stt); break;
-		case 0x46: UnimplementedInstruction(stt); break;
+		case 0x39: 
+		{
+			unsigned char* sPHighByte = (unsigned char*)(&(stt->sp));
+			unsigned char* sPLowByte = ((unsigned char*)(&(stt->sp))) + 1;
+			DADInstruction(stt, &(stt->h), &(stt->l), sPHighByte, sPLowByte);
+			break;
+		}
+		case 0x3a: 
+		{
+			LDAInstruction(stt);
+			break;
+		}
+		case 0x3b: 
+		{
+			unsigned char* sPHighByte = (unsigned char*)(&(stt->sp));
+			unsigned char* sPLowByte = ((unsigned char*)(&(stt->sp))) + 1;
+			DCXInstruction(sPHighByte, sPLowByte);
+			break;
+		}
+		case 0x3c: 
+		{
+			INRInstruction(stt, &(stt->a));
+			break;
+		}
+		case 0x3d: 
+		{
+			DCRInstruction(stt, &(stt->a));
+			break;
+		}
+		case 0x3e: 
+		{
+			MVIInstruction(stt, &(stt->a));
+			break;
+		}
+		case 0x3f: 
+		{
+			CMCInstruction(stt);
+			break;
+		}
+		case 0x40: 
+		{
+			MOVInstruction(&(stt->b), &(stt->b));
+			break;
+		}
+		case 0x41: 
+		{
+			MOVInstruction(&(stt->b), &(stt->c));
+			break;
+		}
+		case 0x42: 
+		{
+			MOVInstruction(&(stt->b), &(stt->d));
+			break;
+		}
+		case 0x43: 
+		{
+			MOVInstruction(&(stt->b), &(stt->e));
+			break;
+		}
+		case 0x44: 
+		{
+			MOVInstruction(&(stt->b), &(stt->d));
+			break;
+		}
+		case 0x45: 
+		{
+			MOVInstruction(&(stt->b), &(stt->h));
+			break;
+		}
+		case 0x46: 
+		{
+			MOVInstruction(&(stt->b), &(stt->l));
+			break;
+		}
 		case 0x47: UnimplementedInstruction(stt); break;
 		case 0x48: UnimplementedInstruction(stt); break;
 		case 0x49: UnimplementedInstruction(stt); break;
