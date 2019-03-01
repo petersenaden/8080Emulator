@@ -368,66 +368,364 @@ void Execute8080Op(struct State8080 *stt)
 		}
 		case 0x46: 
 		{
-			MOVInstruction(&(stt->b), &(stt->l));
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(&(stt->b), charToManipulate);
 			break;
 		}
-		case 0x47: UnimplementedInstruction(stt); break;
-		case 0x48: UnimplementedInstruction(stt); break;
-		case 0x49: UnimplementedInstruction(stt); break;
-		case 0x4a: UnimplementedInstruction(stt); break;
-		case 0x4b: UnimplementedInstruction(stt); break;
-		case 0x4c: UnimplementedInstruction(stt); break;
-		case 0x4d: UnimplementedInstruction(stt); break;
-		case 0x4e: UnimplementedInstruction(stt); break;
-		case 0x4f: UnimplementedInstruction(stt); break;
-		case 0x50: UnimplementedInstruction(stt); break;
-		case 0x51: UnimplementedInstruction(stt); break;
-		case 0x52: UnimplementedInstruction(stt); break;
-		case 0x53: UnimplementedInstruction(stt); break;
-		case 0x54: UnimplementedInstruction(stt); break;
-		case 0x55: UnimplementedInstruction(stt); break;
-		case 0x56: UnimplementedInstruction(stt); break;
-		case 0x57: UnimplementedInstruction(stt); break;
-		case 0x58: UnimplementedInstruction(stt); break;
-		case 0x59: UnimplementedInstruction(stt); break;
-		case 0x5a: UnimplementedInstruction(stt); break;
-		case 0x5b: UnimplementedInstruction(stt); break;
-		case 0x5c: UnimplementedInstruction(stt); break;
-		case 0x5d: UnimplementedInstruction(stt); break;
-		case 0x5e: UnimplementedInstruction(stt); break;
-		case 0x5f: UnimplementedInstruction(stt); break;
-		case 0x60: UnimplementedInstruction(stt); break;
-		case 0x61: UnimplementedInstruction(stt); break;
-		case 0x62: UnimplementedInstruction(stt); break;
-		case 0x63: UnimplementedInstruction(stt); break;
-		case 0x64: UnimplementedInstruction(stt); break;
-		case 0x65: UnimplementedInstruction(stt); break;
-		case 0x66: UnimplementedInstruction(stt); break;
-		case 0x67: UnimplementedInstruction(stt); break;
-		case 0x68: UnimplementedInstruction(stt); break;
-		case 0x69: UnimplementedInstruction(stt); break;
-		case 0x6a: UnimplementedInstruction(stt); break;
-		case 0x6b: UnimplementedInstruction(stt); break;
-		case 0x6c: UnimplementedInstruction(stt); break;
-		case 0x6d: UnimplementedInstruction(stt); break;
-		case 0x6e: UnimplementedInstruction(stt); break;
-		case 0x6f: UnimplementedInstruction(stt); break;
-		case 0x70: UnimplementedInstruction(stt); break;
-		case 0x71: UnimplementedInstruction(stt); break;
-		case 0x72: UnimplementedInstruction(stt); break;
-		case 0x73: UnimplementedInstruction(stt); break;
-		case 0x74: UnimplementedInstruction(stt); break;
-		case 0x75: UnimplementedInstruction(stt); break;
-		case 0x76: UnimplementedInstruction(stt); break;
-		case 0x77: UnimplementedInstruction(stt); break;
-		case 0x78: UnimplementedInstruction(stt); break;
-		case 0x79: UnimplementedInstruction(stt); break;
-		case 0x7a: UnimplementedInstruction(stt); break;
-		case 0x7b: UnimplementedInstruction(stt); break;
-		case 0x7c: UnimplementedInstruction(stt); break;
-		case 0x7d: UnimplementedInstruction(stt); break;
-		case 0x7e: UnimplementedInstruction(stt); break;
-		case 0x7f: UnimplementedInstruction(stt); break;
+		case 0x47: 
+		{
+			MOVInstruction(&(stt->b), &(stt->a));
+			break;
+		}
+		case 0x48: 
+		{
+			MOVInstruction(&(stt->c), &(stt->b));
+			break;
+		}
+		case 0x49: 
+		{
+			MOVInstruction(&(stt->c), &(stt->c));
+			break;
+		}
+		case 0x4a: 
+		{
+			MOVInstruction(&(stt->c), &(stt->d));
+			break;
+		}
+		case 0x4b: 
+		{
+			MOVInstruction(&(stt->c), &(stt->e));
+			break;
+		}
+		case 0x4c: 
+		{
+			MOVInstruction(&(stt->c), &(stt->h));
+			break;
+		}
+		case 0x4d: 
+		{
+			MOVInstruction(&(stt->c), &(stt->l));
+			break;
+		}
+		case 0x4e: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(&(stt->c), charToManipulate);
+			break;
+		}
+		case 0x4f: 
+		{
+			MOVInstruction(&(stt->c), &(stt->a));
+			break;
+		}
+		case 0x50: 
+		{
+			MOVInstruction(&(stt->d), &(stt->b));
+			break;
+		}
+		case 0x51: 
+		{
+			MOVInstruction(&(stt->d), &(stt->c));
+			break;
+		}
+		case 0x52: 
+		{
+			MOVInstruction(&(stt->d), &(stt->d));
+			break;
+		}
+		case 0x53: 
+		{
+			MOVInstruction(&(stt->d), &(stt->e));
+			break;
+		}
+		case 0x54: 
+		{
+			MOVInstruction(&(stt->d), &(stt->h));
+			break;
+		}
+		case 0x55: 
+		{
+			MOVInstruction(&(stt->d), &(stt->l));
+			break;
+		}
+		case 0x56: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(&(stt->d), charToManipulate);
+			break;
+		}
+		case 0x57: 
+		{
+			MOVInstruction(&(stt->d), &(stt->a));
+			break;
+		}
+		case 0x58: 
+		{
+			MOVInstruction(&(stt->e), &(stt->b));
+			break;
+		}
+		case 0x59: 
+		{
+			MOVInstruction(&(stt->e), &(stt->c));
+			break;
+		}
+		case 0x5a: 
+		{
+			MOVInstruction(&(stt->e), &(stt->d));
+			break;
+		}
+		case 0x5b: 
+		{
+			MOVInstruction(&(stt->e), &(stt->e));
+			break;
+		}
+		case 0x5c: 
+		{
+			MOVInstruction(&(stt->e), &(stt->h));
+			break;
+		}
+		case 0x5d: 
+		{
+			MOVInstruction(&(stt->e), &(stt->l));
+			break;
+		}
+		case 0x5e: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(&(stt->e), charToManipulate);
+			break;
+		}
+		case 0x5f: 
+		{
+			MOVInstruction(&(stt->e), &(stt->a));
+			break;
+		}
+		case 0x60: 
+		{
+			MOVInstruction(&(stt->h), &(stt->b));
+			break;
+		}
+		case 0x61: 
+		{
+			MOVInstruction(&(stt->h), &(stt->c));
+			break;
+		}
+		case 0x62: 
+		{
+			MOVInstruction(&(stt->h), &(stt->d));
+			break;
+		}
+		case 0x63: 
+		{
+			MOVInstruction(&(stt->h), &(stt->e));
+			break;
+		}
+		case 0x64: 
+		{
+			MOVInstruction(&(stt->h), &(stt->h));
+			break;
+		}
+		case 0x65: 
+		{
+			MOVInstruction(&(stt->h), &(stt->l));
+			break;
+		}
+		case 0x66: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(&(stt->h), charToManipulate);
+			break;
+		}
+		case 0x67: 
+		{
+			MOVInstruction(&(stt->h), &(stt->a));
+			break;
+		}
+		case 0x68: 
+		{
+			MOVInstruction(&(stt->l), &(stt->b));
+			break;
+		}
+		case 0x69: 
+		{
+			MOVInstruction(&(stt->l), &(stt->c));
+			break;
+		}
+		case 0x6a: 
+		{
+			MOVInstruction(&(stt->l), &(stt->d));
+			break;
+		}
+		case 0x6b: 
+		{
+			MOVInstruction(&(stt->l), &(stt->e));
+			break;
+		}
+		case 0x6c: 
+		{
+			MOVInstruction(&(stt->l), &(stt->h));
+			break;
+		}
+		case 0x6d: 
+		{
+			MOVInstruction(&(stt->l), &(stt->l));
+			break;
+		}
+		case 0x6e: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(&(stt->l), charToManipulate);
+			break;
+		}
+		case 0x6f: 
+		{
+			MOVInstruction(&(stt->l), &(stt->a));
+			break;
+		}
+		case 0x70: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(charToManipulate, &(stt->b));
+			break;
+		}
+		case 0x71: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(charToManipulate, &(stt->c));
+			break;
+		}
+		case 0x72: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(charToManipulate, &(stt->d));
+			break;
+		}
+		case 0x73: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(charToManipulate, &(stt->e));
+			break;
+		}
+		case 0x74: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(charToManipulate, &(stt->h));
+			break;
+		}
+		case 0x75: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(charToManipulate, &(stt->l));
+			break;
+		}
+		case 0x76: 
+		{
+			HLTInstruction();
+			break;
+		}
+		case 0x77: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(charToManipulate, &(stt->a));
+			break;
+		}
+		case 0x78:
+		{
+			MOVInstruction(&(stt->a), &(stt->b));
+			break;
+		}
+		case 0x79: 
+		{
+			MOVInstruction(&(stt->a), &(stt->c));
+			break;
+		}
+		case 0x7a: 
+		{
+			MOVInstruction(&(stt->a), &(stt->d));
+			break;
+		}
+		case 0x7b: 
+		{
+			MOVInstruction(&(stt->a), &(stt->e));
+			break;
+		}
+		case 0x7c: 
+		{
+			MOVInstruction(&(stt->a), &(stt->h));
+			break;
+		}
+		case 0x7d: 
+		{
+			MOVInstruction(&(stt->a), &(stt->l));
+			break;
+		}
+		case 0x7e: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			MOVInstruction(&(stt->a), charToManipulate);
+			break;
+		}
+		case 0x7f: 
+		{
+			MOVInstruction(&(stt->a), &(stt->a));
+			break;
+		}
 		case 0x80: UnimplementedInstruction(stt); break;
 		case 0x81: UnimplementedInstruction(stt); break;
 		case 0x82: UnimplementedInstruction(stt); break;

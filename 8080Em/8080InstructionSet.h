@@ -31,3 +31,4 @@ void INRMInstruction(struct State8080* stt);
 void DCRMInstruction(struct State8080* stt);
 void MVIMInstruction(struct State8080* stt);
 void LDAInstruction(struct State8080* stt);
+void HLTInstruction();

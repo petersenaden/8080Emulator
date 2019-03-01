@@ -1,5 +1,6 @@
 #include<stdlib.h>
 #include<limits.h>
+#include <unistd.h>
 #include<stdio.h>
 
 #ifndef INSTRUCTIONSET8080
@@ -17,7 +18,7 @@ void UnimplementedInstruction(struct State8080* stt)
 
 /* 
   To avoid dereferencing a null pointer, we'll just keep the secondByte to be a value variable.
-  Also, I'm impelmenting the AC and C flags by hand because implementing the instructions here
+  Also, I'm implementing the AC and C flags by hand because implementing the instructions here
   would cause double the work for virtually every operation.
  */
 void CheckFlags(struct State8080* stt, unsigned char checkByte, bool checkSignFlag, bool checkZeroFlag, bool checkParityFlag)
@@ -47,7 +48,6 @@ void CheckFlags(struct State8080* stt, unsigned char checkByte, bool checkSignFl
 		}
 		stt->sf.p = (totalOdds % 2 == 1);
 	}
-	
 }
 
 void LXIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
@@ -362,6 +362,27 @@ void LDAInstruction(struct State8080* stt)
 	stt->a = charToManipulate;
 	stt->pc++;
 	stt->pc++;
+}
+
+void HLTInstruction()
+{
+	sleep(50000);
+}
+
+void ADDInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
+{
+	(*byteOne) = (unsigned char)((*byteTwo) + (*byteThree));
+	CheckFlags(stt, (*byteOne), true, true, true);
+	if ((0xFF - (*byteTwo)) < (*byteThree))
+	{
+		stt->sf.cy = true;
+	}
+	unsigned char maskedByteTwo = (unsigned char)((*byteTwo) & 0b1111);
+	unsigned char maskedByteThree = (unsigned char)((*byteThree) & 0b1111);
+	if ((maskedByteTwo + maskedByteThree) > 0b1111)
+	{
+		stt->sf.ac = true;
+	}
 }
 
 
