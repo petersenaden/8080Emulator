@@ -843,11 +843,23 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xce: UnimplementedInstruction(stt); break;
 		case 0xcf: UnimplementedInstruction(stt); break;
 		case 0xd0: UnimplementedInstruction(stt); break;
-		case 0xd1: UnimplementedInstruction(stt); break;
+		case 0xd1: UnimplementedInstruction(stt);
+		{
+			POPInstruction(stt, &(stt->e), &(stt->d));
+			break;
+		}
 		case 0xd2: UnimplementedInstruction(stt); break;
-		case 0xd3: UnimplementedInstruction(stt); break;
+		case 0xd3: UnimplementedInstruction(stt);
+		{
+			OUTInstruction();
+			break;
+		}
 		case 0xd4: UnimplementedInstruction(stt); break;
-		case 0xd5: UnimplementedInstruction(stt); break;
+		case 0xd5: UnimplementedInstruction(stt);
+		{
+			PUSHInstruction(stt, &(stt->e), &(stt->d));
+			break;
+		}
 		case 0xd6: UnimplementedInstruction(stt); break;
 		case 0xd7: UnimplementedInstruction(stt); break;
 		case 0xd8: UnimplementedInstruction(stt); break;
@@ -859,36 +871,68 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xde: UnimplementedInstruction(stt); break;
 		case 0xdf: UnimplementedInstruction(stt); break;
 		case 0xe0: UnimplementedInstruction(stt); break;
-		case 0xe1: UnimplementedInstruction(stt); break;
+		case 0xe1: UnimplementedInstruction(stt);
+		{
+			POPInstruction(stt, &(stt->l), &(stt->h));
+			break;
+		}
 		case 0xe2: UnimplementedInstruction(stt); break;
 		case 0xe3: UnimplementedInstruction(stt); break;
 		case 0xe4: UnimplementedInstruction(stt); break;
-		case 0xe5: UnimplementedInstruction(stt); break;
-		case 0xe6: UnimplementedInstruction(stt); break;
+		case 0xe5: UnimplementedInstruction(stt);
+		{
+			PUSHInstruction(stt, &(stt->l), &(stt->h));
+			break;
+		}
+		case 0xe6: UnimplementedInstruction(stt);
+		{
+			ANIInstruction(stt, &(stt->a), &(stt->a));
+			break;
+		}
 		case 0xe7: UnimplementedInstruction(stt); break;
 		case 0xe8: UnimplementedInstruction(stt); break;
 		case 0xe9: UnimplementedInstruction(stt); break;
 		case 0xea: UnimplementedInstruction(stt); break;
-		case 0xeb: UnimplementedInstruction(stt); break;
+		case 0xeb: UnimplementedInstruction(stt);
+		{
+			EXCHANGEInstruction(&(stt->h), &(stt->d), &(stt->l), &(stt->e));
+			break;
+		}
 		case 0xec: UnimplementedInstruction(stt); break;
 		case 0xed: UnimplementedInstruction(stt); break;
 		case 0xee: UnimplementedInstruction(stt); break;
 		case 0xef: UnimplementedInstruction(stt); break;
 		case 0xf0: UnimplementedInstruction(stt); break;
-		case 0xf1: UnimplementedInstruction(stt); break;
+		case 0xf1: UnimplementedInstruction(stt);
+		{
+			POPPSWInstruction(stt);
+			break;
+		}
 		case 0xf2: UnimplementedInstruction(stt); break;
 		case 0xf3: UnimplementedInstruction(stt); break;
 		case 0xf4: UnimplementedInstruction(stt); break;
-		case 0xf5: UnimplementedInstruction(stt); break;
+		case 0xf5: UnimplementedInstruction(stt);
+		{
+			PUSHPSWInstruction(stt);
+			break;
+		}
 		case 0xf6: UnimplementedInstruction(stt); break;
 		case 0xf7: UnimplementedInstruction(stt); break;
 		case 0xf8: UnimplementedInstruction(stt); break;
 		case 0xf9: UnimplementedInstruction(stt); break;
 		case 0xfa: UnimplementedInstruction(stt); break;
-		case 0xfb: UnimplementedInstruction(stt); break;
+		case 0xfb: UnimplementedInstruction(stt);
+		{
+			EIInstruction();
+			break;
+		}
 		case 0xfc: UnimplementedInstruction(stt); break;
 		case 0xfd: UnimplementedInstruction(stt); break;
-		case 0xfe: UnimplementedInstruction(stt); break;
+		case 0xfe: UnimplementedInstruction(stt);
+		{
+			CPIInstruction(stt, &(stt->a));
+			break;
+		}
 		case 0xff: UnimplementedInstruction(stt); break;
 		default:   UnimplementedInstruction(stt); break;
 	}

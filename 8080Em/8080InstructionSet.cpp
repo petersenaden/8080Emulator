@@ -538,15 +538,15 @@ void RETInstruction(struct State8080* stt)
 	++stt->sp;
 }
 
-void CALLInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+void CALLInstruction(struct State8080* stt)
 {
-	//this instruction is wrong
-	//endiannness might get you here
+	unsigned char newPCHighByte = stt->memory[stt->pc + 2];
+	unsigned char newPCLowByte = stt->memory[stt->pc + 1];
 	unsigned char firstValue = (unsigned char)(stt->pc >> 8);
 	unsigned char secondValue = (unsigned char)(stt->pc & 0b11111111);
 	stt->memory[stt->sp -1] = firstValue;
 	stt->memory[stt->sp -2] = secondValue;
-	stt->pc = (unsigned short)(((*byteTwo) << 8) | (*byteOne));
+	stt->pc = (unsigned short)(((newPCHighByte) << 8) | (newPCLowByte));
 	--stt->sp;
 	--stt->sp;
 }
@@ -556,9 +556,13 @@ void OUTInstruction()
 	//TODO
 }
 
-void ANIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
+void ANIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
 {
-	ANAInstruction(stt, byteOne, byteTwo, byteThree);
+	unsigned char dataToAnd = stt->memory[stt->pc + 1];
+	(*byteOne) = (unsigned char)((*byteTwo) & (dataToAnd));
+	CheckFlags(stt, (*byteOne), true, true, true);
+	stt->sf.cy = false;
+	++stt->pc;
 }
 
 void EXCHANGEInstruction(unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree, unsigned char* byteFour)
@@ -608,9 +612,18 @@ void EIInstruction()
 	// TODO
 }
 
-void CPIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+void CPIInstruction(struct State8080* stt, unsigned char* byteOne)
 {
-	CMPInstruction(stt, byteOne, byteTwo);
+	unsigned char byteTwo = stt->memory[stt->pc + 1];
+	unsigned char firstRegister = (*byteOne);
+	unsigned char secondRegister = (unsigned char)((~(byteTwo)) + 1);
+	unsigned char result = (unsigned char)(firstRegister + secondRegister);
+	CheckFlags(stt, (*byteOne), true, true, true);
+	stt->sf.z = (firstRegister == (byteTwo));
+	stt->sf.cy = (char)(result >> 7);
+	//do aux carry
+	
+	++stt->pc;
 }
 
 
