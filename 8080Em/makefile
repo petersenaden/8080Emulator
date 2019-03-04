@@ -4,7 +4,7 @@ CFlags = -Wall -Wextra -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wcast-ali
 OutputFile = -o 8080Emu
 
 #targets
-all: mainBuild clean
+all: clearScr mainBuild clean
 
 mainBuild: 8080Disassembler.o 8080Emulation.o 8080InstructionSet.o
 	$(CCom) $(CFlags) $(OutputFile) 8080Disassembler.o 8080Emulation.o 8080InstructionSet.o
@@ -20,3 +20,6 @@ mainBuild: 8080Disassembler.o 8080Emulation.o 8080InstructionSet.o
 
 clean:
 	rm -f 8080Emulation.o 8080Disassembler.o 8080InstructionSet.o
+	
+clearScr:
+	clear

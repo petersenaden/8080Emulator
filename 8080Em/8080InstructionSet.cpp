@@ -112,7 +112,7 @@ void DCRInstruction(struct State8080* stt, unsigned char* byteOne)
 	{
 		stt->sf.cy = 1;
 	}
-	(*byteOne)--;
+	(*byteOne) = (unsigned char)((*byteOne) + 0b11111111);
 	CheckFlags(stt, (*byteOne), true, true, true);
 	// check endianness
 	// Only way AC can be set if is LS 4 bits are zero. 
@@ -185,7 +185,7 @@ void DCXInstruction(unsigned char* byteOne, unsigned char* byteTwo)
 	numberToUse = (unsigned short int)(*byteOne);
 	numberToUse = (unsigned short int)(numberToUse << 8);
 	numberToUse = (unsigned short int)(numberToUse + (*byteTwo));
-	numberToUse--;
+	numberToUse = (unsigned short int)(numberToUse + 0b1111111111111111);
 	(*byteOne) = (unsigned char)(numberToUse & 0xFF);
 	(*byteTwo) = (unsigned char)(numberToUse >> 8);
 }
@@ -316,7 +316,7 @@ void DCRMInstruction(struct State8080* stt)
 	addressToUse = (unsigned short int)(addressToUse << 8);
 	addressToUse = (unsigned short int)(addressToUse + (stt->l));
 	unsigned char* charToManipulate = &(stt->memory[addressToUse]);
-	--(*charToManipulate);
+	(*charToManipulate) = (unsigned char)((*charToManipulate) + 0b11111111);
 	CheckFlags(stt, (*charToManipulate), true, true, true);
 	// Carry flag
 	if ((*charToManipulate) == 0)
@@ -352,8 +352,8 @@ void MVIMInstruction(struct State8080* stt)
 
 void LDAInstruction(struct State8080* stt)
 {
-	unsigned char highByteAddress = stt->memory[stt->sp + 1];
-	unsigned char lowByteAddress = stt->memory[stt->sp + 2];
+	unsigned char highByteAddress = stt->memory[stt->pc + 1];
+	unsigned char lowByteAddress = stt->memory[stt->pc + 2];
 	unsigned short int addressToUse = 0;
 	addressToUse = (unsigned short int)(highByteAddress);
 	addressToUse = (unsigned short int)(addressToUse << 8);
@@ -385,13 +385,233 @@ void ADDInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 	}
 }
 
+void ADCInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
+{
+	unsigned char intermediateValue = (unsigned char)(*byteThree);
+	if (stt->sf.cy)
+	{
+		++(intermediateValue);
+	}
+	(*byteOne) = (unsigned char)((*byteTwo) + intermediateValue);
+	CheckFlags(stt, (*byteOne), true, true, true);
+	if ((0xFF - (*byteTwo)) < intermediateValue)
+	{
+		stt->sf.cy = true;
+	}
+	unsigned char maskedByteTwo = (unsigned char)((*byteTwo) & 0b1111);
+	unsigned char maskedByteThree = (unsigned char)(intermediateValue & 0b1111);
+	if ((maskedByteTwo + maskedByteThree) > 0b1111)
+	{
+		stt->sf.ac = true;
+	}
+}
 
+void SUBInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
+{
+	unsigned char intermediateValue = (unsigned char)((~(*byteThree)) + 1);
+	(*byteOne) = (unsigned char)((*byteTwo) + intermediateValue);
+	CheckFlags(stt, (*byteOne), true, true, true);
+	if ((0xFF - (*byteTwo)) < intermediateValue)
+	{
+		stt->sf.cy = true;
+	}
+	unsigned char maskedByteTwo = (unsigned char)((*byteTwo) & 0b1111);
+	unsigned char maskedByteThree = (unsigned char)(intermediateValue & 0b1111);
+	if ((maskedByteTwo + maskedByteThree) > 0b1111)
+	{
+		stt->sf.ac = true;
+	}
+}
 
+void SBBInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
+{
+	unsigned char intermediateValue = (unsigned char)((~(*byteThree)) + 1);
+	if (stt->sf.cy)
+	{
+		intermediateValue = (unsigned char)(intermediateValue + 0b11111111);
+	}
+	(*byteOne) = (unsigned char)((*byteTwo) + intermediateValue);
+	CheckFlags(stt, (*byteOne), true, true, true);
+	if ((0xFF - (*byteTwo)) < intermediateValue)
+	{
+		stt->sf.cy = true;
+	}
+	unsigned char maskedByteTwo = (unsigned char)((*byteTwo) & 0b1111);
+	unsigned char maskedByteThree = (unsigned char)(intermediateValue & 0b1111);
+	if ((maskedByteTwo + maskedByteThree) > 0b1111)
+	{
+		stt->sf.ac = true;
+	}
+}
 
+void ANAInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
+{
+	(*byteOne) = (unsigned char)((*byteTwo) & (*byteThree));
+	CheckFlags(stt, (*byteOne), true, true, true);
+	stt->sf.cy = false;
+}
 
+void XRAInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
+{
+	(*byteOne) = (unsigned char)((*byteTwo) ^ (*byteThree));
+	CheckFlags(stt, (*byteOne), true, true, true);
+	stt->sf.cy = false;
+}
 
+void ORAInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
+{
+	(*byteOne) = (unsigned char)((*byteTwo) | (*byteThree));
+	CheckFlags(stt, (*byteOne), true, true, true);
+	stt->sf.cy = false;
+}
 
+void CMPInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+{
+	unsigned char firstRegister = (*byteOne);
+	unsigned char secondRegister = (unsigned char)((~(*byteTwo)) + 1);
+	unsigned char result = (unsigned char)(firstRegister + secondRegister);
+	CheckFlags(stt, (*byteOne), true, true, true);
+	stt->sf.z = (firstRegister == (*byteTwo));
+	stt->sf.cy = (char)(result >> 7);
+	//do aux carry
+}
 
+void POPInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+{
+	(*byteOne) = stt->memory[stt->sp];
+	(*byteTwo) = stt->memory[(stt->sp) + 1];
+	++stt->sp;
+	++stt->sp;
+}
+
+void JNZInstruction(struct State8080* stt)
+{
+	if (stt->sf.z)
+	{
+		unsigned char *currOperation = &(stt->memory[stt->pc]);
+		unsigned short int addressToUse = (short unsigned int)((currOperation[2] << 8) | currOperation[1]);
+		stt->pc = addressToUse;
+	}
+}
+
+void JMPInstruction(struct State8080* stt)
+{
+	unsigned char *currOperation = &(stt->memory[stt->pc]);
+	unsigned short int addressToUse = (short unsigned int)((currOperation[2] << 8) | currOperation[1]);
+	stt->pc = addressToUse;
+}
+
+void PUSHInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+{
+	unsigned short firstAddress = (short unsigned int)(stt->sp - 2);
+	unsigned short secondAddress = (short unsigned int)(stt->sp - 1);
+	stt->memory[firstAddress] = (*byteOne);
+	stt->memory[secondAddress] = (*byteTwo);
+	--stt->sp;
+	--stt->sp;
+}
+
+void ADIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+{			
+	unsigned char byteToUse = stt->memory[stt->pc + 1];
+	(*byteOne) = (unsigned char)((*byteTwo) + (byteToUse));
+	CheckFlags(stt, (*byteOne), true, true, true);
+	if ((0xFF - (*byteTwo)) < (byteToUse))
+	{
+		stt->sf.cy = true;
+	}
+	unsigned char maskedByteTwo = (unsigned char)((*byteTwo) & 0b1111);
+	unsigned char maskedByteThree = (unsigned char)((byteToUse) & 0b1111);
+	if ((maskedByteTwo + maskedByteThree) > 0b1111)
+	{
+		stt->sf.ac = true;
+	}
+	stt->pc++;
+}
+
+void RETInstruction(struct State8080* stt)
+{
+	unsigned short firstAddress = (short unsigned)(stt->sp);
+	unsigned short secondAddress = (short unsigned)(stt->sp + 1);
+	stt->pc = (unsigned short)(stt->memory[firstAddress] << 8 | stt->memory[secondAddress]);
+	++stt->sp;
+	++stt->sp;
+}
+
+void CALLInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+{
+	//this instruction is wrong
+	//endiannness might get you here
+	unsigned char firstValue = (unsigned char)(stt->pc >> 8);
+	unsigned char secondValue = (unsigned char)(stt->pc & 0b11111111);
+	stt->memory[stt->sp -1] = firstValue;
+	stt->memory[stt->sp -2] = secondValue;
+	stt->pc = (unsigned short)(((*byteTwo) << 8) | (*byteOne));
+	--stt->sp;
+	--stt->sp;
+}
+
+void OUTInstruction()
+{
+	//TODO
+}
+
+void ANIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
+{
+	ANAInstruction(stt, byteOne, byteTwo, byteThree);
+}
+
+void EXCHANGEInstruction(unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree, unsigned char* byteFour)
+{
+	unsigned char firstByte = (*byteOne);
+	unsigned char secondByte = (*byteTwo);
+	unsigned char thirdByte = (*byteThree);
+	unsigned char fourthByte = (*byteFour);
+	(*byteOne) = secondByte;
+	(*byteTwo) = firstByte;
+	(*byteThree) = fourthByte;
+	(*byteFour) = thirdByte;
+}
+
+void POPPSWInstruction(struct State8080* stt)
+{
+	unsigned char stackPointerMemoryValue = stt->memory[stt->sp];
+	unsigned char stackPointerMemoryValueForA = stt->memory[stt->sp + 1];
+	stt->sf.z = (stackPointerMemoryValue >> 7) & 1;
+	stt->sf.s = (stackPointerMemoryValue >> 6) & 1;
+	stt->sf.p = (stackPointerMemoryValue >> 5) & 1;
+	stt->sf.cy = (stackPointerMemoryValue >> 4) & 1;
+	stt->sf.ac = (stackPointerMemoryValue >> 3) & 1;
+	// might fail depending on how padding was treated
+	// in the original 8080 spec
+	stt->a = stackPointerMemoryValueForA;
+	++stt->sp;
+	++stt->sp;
+}
+
+void PUSHPSWInstruction(struct State8080* stt)
+{
+	unsigned char aggregateFlags =(unsigned char)(
+		(stt->sf.z << 7) |
+		(stt->sf.s << 6) |
+		(stt->sf.p << 5) |
+		(stt->sf.cy << 4) |
+		(stt->sf.ac << 3));
+	stt->memory[stt->sp - 2] = aggregateFlags;
+	stt->memory[stt->sp - 1] = stt->a;
+	--stt->sp;
+	--stt->sp;
+}
+
+void EIInstruction()
+{
+	// TODO
+}
+
+void CPIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+{
+	CMPInstruction(stt, byteOne, byteTwo);
+}
 
 
 

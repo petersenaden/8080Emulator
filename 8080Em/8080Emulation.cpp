@@ -765,7 +765,11 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xa4: UnimplementedInstruction(stt); break;
 		case 0xa5: UnimplementedInstruction(stt); break;
 		case 0xa6: UnimplementedInstruction(stt); break;
-		case 0xa7: UnimplementedInstruction(stt); break;
+		case 0xa7: UnimplementedInstruction(stt);
+		{
+			ANAInstruction(stt, &(stt->a), &(stt->a), &(stt->a));
+			break;
+		}
 		case 0xa8: UnimplementedInstruction(stt); break;
 		case 0xa9: UnimplementedInstruction(stt); break;
 		case 0xaa: UnimplementedInstruction(stt); break;
@@ -773,7 +777,11 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xac: UnimplementedInstruction(stt); break;
 		case 0xad: UnimplementedInstruction(stt); break;
 		case 0xae: UnimplementedInstruction(stt); break;
-		case 0xaf: UnimplementedInstruction(stt); break;
+		case 0xaf: UnimplementedInstruction(stt);
+		{
+			XRAInstruction(stt, &(stt->a), &(stt->a), &(stt->a));
+			break;
+		}
 		case 0xb0: UnimplementedInstruction(stt); break;
 		case 0xb1: UnimplementedInstruction(stt); break;
 		case 0xb2: UnimplementedInstruction(stt); break;
@@ -791,19 +799,47 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xbe: UnimplementedInstruction(stt); break;
 		case 0xbf: UnimplementedInstruction(stt); break;
 		case 0xc0: UnimplementedInstruction(stt); break;
-		case 0xc1: UnimplementedInstruction(stt); break;
-		case 0xc2: UnimplementedInstruction(stt); break;
-		case 0xc3: UnimplementedInstruction(stt); break;
+		case 0xc1: UnimplementedInstruction(stt);
+		{
+			POPInstruction(stt, &(stt->c), &(stt->b));
+			break;
+		}
+		case 0xc2: UnimplementedInstruction(stt);
+		{
+			JNZInstruction(stt);
+			break;
+		}
+		case 0xc3: UnimplementedInstruction(stt);
+		{
+			JMPInstruction(stt);
+			break;
+		}
 		case 0xc4: UnimplementedInstruction(stt); break;
-		case 0xc5: UnimplementedInstruction(stt); break;
-		case 0xc6: UnimplementedInstruction(stt); break;
+		case 0xc5: UnimplementedInstruction(stt);
+		{
+			PUSHInstruction(stt, &(stt->c), &(stt->b));
+			break;
+		}
+		case 0xc6: UnimplementedInstruction(stt);
+		{
+			ADIInstruction(stt, &(stt->a), &(stt->a));
+			break;
+		}
 		case 0xc7: UnimplementedInstruction(stt); break;
 		case 0xc8: UnimplementedInstruction(stt); break;
-		case 0xc9: UnimplementedInstruction(stt); break;
+		case 0xc9: UnimplementedInstruction(stt);
+		{
+			RETInstruction(stt);
+			break;
+		}
 		case 0xca: UnimplementedInstruction(stt); break;
 		case 0xcb: UnimplementedInstruction(stt); break;
 		case 0xcc: UnimplementedInstruction(stt); break;
-		case 0xcd: UnimplementedInstruction(stt); break;
+		case 0xcd: UnimplementedInstruction(stt);
+		{
+			CALLInstruction(stt);
+			break;
+		}
 		case 0xce: UnimplementedInstruction(stt); break;
 		case 0xcf: UnimplementedInstruction(stt); break;
 		case 0xd0: UnimplementedInstruction(stt); break;
