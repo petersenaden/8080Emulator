@@ -1,13 +1,14 @@
 #makefile for 8080 Emulator
 CCom = g++
 CFlags = -Wall -Wextra -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wcast-align -Wstrict-overflow=5 -Wwrite-strings -Waggregate-return -Wswitch-default -Wconversion
-OutputFile = -o 8080Emu
+OutputFileWithOFlag = -o 8080Emu
+OutputFile = 8080Emu
 
 #targets
 all: clearScr mainBuild clean
 
 mainBuild: 8080Disassembler.o 8080Emulation.o 8080InstructionSet.o
-	$(CCom) $(CFlags) $(OutputFile) 8080Disassembler.o 8080Emulation.o 8080InstructionSet.o
+	$(CCom) $(CFlags) $(OutputFileWithOFlag) 8080Disassembler.o 8080Emulation.o 8080InstructionSet.o
 
 8080Disassembler.o: 8080Disassembler.cpp
 	$(CCom) $(CFlags) -c 8080Disassembler.cpp
@@ -23,3 +24,6 @@ clean:
 	
 clearScr:
 	clear
+	
+run:
+	./$(OutputFile) ./SI_ROM/invaders_e.rom ./SI_ROM/invaders_f.rom ./SI_ROM/invaders_g.rom ./SI_ROM/invaders_h.rom

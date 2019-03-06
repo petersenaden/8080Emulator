@@ -972,31 +972,31 @@ unsigned char GetNextByte(FILE* rom)
 	return returnVar;
 }
 
-int main(int argc, char**argv)
-{
+// int main(int argc, char**argv)
+// {
 	// avoids compiler warning
-	(void)argc;
-	int programCounter = 0;
-	FILE* rom;
-	if (fopen_safe(&rom, argv[1], "rb") != 0)
-	{
-		exit(EXIT_FAILURE);
-	}
+	// (void)argc;
+	// int programCounter = 0;
+	// FILE* rom;
+	// if (fopen_safe(&rom, argv[1], "rb") != 0)
+	// {
+		// exit(EXIT_FAILURE);
+	// }
 	
-	fseek(rom, 0, SEEK_END);
-	//ftell(rom);
-	fseek(rom, 0, SEEK_SET);
-	for(;;)
-	{
-		if (feof(rom))
-		{
-			break;
-		}
-		unsigned char currByte = GetNextByte(rom);
-		char* outputString = ProcessByte(currByte, rom, &programCounter);
-		OutputByte(outputString);
-	}
+	// fseek(rom, 0, SEEK_END);
+	// ftell(rom);
+	// fseek(rom, 0, SEEK_SET);
+	// for(;;)
+	// {
+		// if (feof(rom))
+		// {
+			// break;
+		// }
+		// unsigned char currByte = GetNextByte(rom);
+		// char* outputString = ProcessByte(currByte, rom, &programCounter);
+		// OutputByte(outputString);
+	// }
 
-	fclose(rom);
-    return 0;
-}
+	// fclose(rom);
+    // return 0;
+// }

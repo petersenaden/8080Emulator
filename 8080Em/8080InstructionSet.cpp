@@ -13,6 +13,7 @@ void UnimplementedInstruction(struct State8080* stt)
 	(stt->pc)--;
 	// FIXME: sp might need to be reversed
 	// FIXME: output to log file
+	printf("UNIMPLEMENTED INSTRUCTION\n");
 	exit(1);
 }
 

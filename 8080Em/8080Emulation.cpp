@@ -1,4 +1,8 @@
 #include<stdlib.h>
+#include<stdint.h>
+#include<stdio.h>
+#include<assert.h>
+#include<errno.h>
 #ifndef EMULATION8080
 #define EMULATION8080
 #include "8080Emulation.h"
@@ -8,6 +12,16 @@
 #define INSTRUCTIONSET8080
 #include "8080InstructionSet.h"
 #endif
+
+int fopen_safe2(FILE **f, const char *name, const char *mode) {
+    int ret = 0;
+    assert(f);
+    *f = fopen(name, mode);
+    /* Can't be sure about 1-to-1 mapping of errno and MS' errno_t */
+    if (!*f)
+        ret = errno;
+    return ret;
+}
 
 struct StateFlags* InitializeStateFlagsStruct(struct StateFlags *sf)
 {
@@ -39,6 +53,7 @@ struct State8080* Initialize8080StateStruct(struct State8080 *st)
 void Execute8080Op(struct State8080 *stt)
 {
 	unsigned char *currOp = &(stt->memory[stt->pc]);
+	printf("0x%02X\n", *currOp);
 	switch (*currOp)
 	{
 		case 0x00:								  break; // NOP
@@ -809,18 +824,18 @@ void Execute8080Op(struct State8080 *stt)
 			JNZInstruction(stt);
 			break;
 		}
-		case 0xc3: UnimplementedInstruction(stt);
+		case 0xc3:
 		{
 			JMPInstruction(stt);
 			break;
 		}
 		case 0xc4: UnimplementedInstruction(stt); break;
-		case 0xc5: UnimplementedInstruction(stt);
+		case 0xc5:
 		{
 			PUSHInstruction(stt, &(stt->c), &(stt->b));
 			break;
 		}
-		case 0xc6: UnimplementedInstruction(stt);
+		case 0xc6:
 		{
 			ADIInstruction(stt, &(stt->a), &(stt->a));
 			break;
@@ -937,6 +952,74 @@ void Execute8080Op(struct State8080 *stt)
 		default:   UnimplementedInstruction(stt); break;
 	}
 	stt->pc++;
+}
+
+unsigned char GetNextByteForMemory(FILE* rom)
+{
+	unsigned char returnVar = 0;
+	if (feof(rom))
+	{
+		return returnVar;
+	}
+	int readByte = fgetc(rom);
+	returnVar = (unsigned char)readByte;
+	return returnVar;
+}
+
+void ReadFileIntoMemory(struct State8080* stt, FILE* rom, uint32_t startingAddress)
+{
+	
+	fseek(rom, 0, SEEK_END);
+	long int fSize = ftell(rom);
+	fseek(rom, 0, SEEK_SET);
+	fread(stt->memory, sizeof &stt->memory[startingAddress], fSize, rom);
+	fclose(rom);
+	// for(;;)
+	// {
+		// if (feof(rom))
+		// {
+			// break;
+		// }
+		// unsigned char currByte = GetNextByteForMemory(rom);
+		
+	// }
+	
+}
+
+int main(int argc, char**argv)
+{
+	(void)argc;
+	FILE* rom0;
+	FILE* rom1;
+	FILE* rom2;
+	FILE* rom3;
+	if (fopen_safe2(&rom0, argv[1], "rb") != 0)
+	{
+		exit(EXIT_FAILURE);
+	} 
+	if (fopen_safe2(&rom1, argv[2], "rb") != 0)
+	{
+		exit(EXIT_FAILURE);
+	}
+	if (fopen_safe2(&rom2, argv[3], "rb") != 0)
+	{
+		exit(EXIT_FAILURE);
+	}
+	if (fopen_safe2(&rom3, argv[4], "rb") != 0)
+	{
+		exit(EXIT_FAILURE);
+	}
+	struct State8080* gameState = Initialize8080StateStruct((struct State8080*)calloc(1, sizeof(struct State8080)));
+	ReadFileIntoMemory(gameState, rom0, 0);
+	ReadFileIntoMemory(gameState, rom1, 0x800);
+	ReadFileIntoMemory(gameState, rom2, 0x1000);
+	ReadFileIntoMemory(gameState, rom3, 0x1800);
+	for (int i = 0; i < 10000; i++)
+	{
+		Execute8080Op(gameState);
+	}
+
+	return 0;
 }
 
 
