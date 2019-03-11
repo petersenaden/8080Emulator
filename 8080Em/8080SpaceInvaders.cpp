@@ -23,9 +23,8 @@ void SetColorOfPixel(sf::Uint8* pixels, int currArrPos, int currBit)
 		pixels[currArrPos+1] = 100;
 		pixels[currArrPos+2] = 100;
 		pixels[currArrPos+3] = 100;
-		return;
 	}
-	if (currArrPos < (32 * 240) && currArrPos >= (0))
+	else if (currArrPos < (32 * 240) && currArrPos >= (0))
 	{
 		pixels[currArrPos] = 255;
 		pixels[currArrPos+1] = 255;
@@ -90,7 +89,7 @@ int main(int argc, char *argv[])
 		int currArrPos = 0;
 		for(int i = 0x2400; i < 0x3fff; ++i)
 		{
-			int currByte = gameState->memory[i];
+			unsigned char currByte = gameState->memory[i];
 			for (int j = 0; j < 8; j++)
 			{
 				unsigned char currBit = (currByte >> j) & 1;

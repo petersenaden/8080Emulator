@@ -33,4 +33,4 @@ int fopen_safe2(FILE **f, const char *name, const char *mode);
 
 unsigned char GetNextByteForMemory(FILE* rom);
 
-void ReadFileIntoMemory(struct State8080* stt, FILE* rom, uint32_t startingAddress);
+void ReadFileIntoMemory(struct State8080* stt, FILE* rom, int startingAddress);

@@ -53,7 +53,8 @@ struct State8080* Initialize8080StateStruct(struct State8080 *st)
 void Execute8080Op(struct State8080 *stt)
 {
 	unsigned char *currOp = &(stt->memory[stt->pc]);
-	//printf("0x%02X\n", *currOp);
+	printf("SP:        0x%02X\t", stt->pc);
+	printf("Operation: 0x%02X\n", *currOp);
 	switch (*currOp)
 	{
 		case 0x00:								  break; // NOP
@@ -691,9 +692,9 @@ void Execute8080Op(struct State8080 *stt)
 			unsigned short int addressToUse = 0;
 			addressToUse = (unsigned short int)(stt->h);
 			addressToUse = (unsigned short int)(addressToUse << 8);
-			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			addressToUse = (unsigned short int)(addressToUse | (stt->l));
 			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
-			MOVInstruction(charToManipulate, &(stt->a));
+			MOVInstruction(&(stt->a), charToManipulate);
 			break;
 		}
 		case 0x78:
@@ -822,11 +823,13 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xc2:
 		{
 			JNZInstruction(stt);
+			return;
 			break;
 		}
 		case 0xc3:
 		{
 			JMPInstruction(stt);
+			return;
 			break;
 		}
 		case 0xc4: UnimplementedInstruction(stt); break;
@@ -845,6 +848,7 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xc9:
 		{
 			RETInstruction(stt);
+			return;
 			break;
 		}
 		case 0xca: UnimplementedInstruction(stt); break;
@@ -853,6 +857,7 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xcd:
 		{
 			CALLInstruction(stt);
+			return;
 			break;
 		}
 		case 0xce: UnimplementedInstruction(stt); break;
@@ -959,7 +964,7 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xff: UnimplementedInstruction(stt); break;
 		default:   UnimplementedInstruction(stt); break;
 	}
-		stt->pc++;
+	stt->pc++;
 }
 
 unsigned char GetNextByteForMemory(FILE* rom)
@@ -974,7 +979,7 @@ unsigned char GetNextByteForMemory(FILE* rom)
 	return returnVar;
 }
 
-void ReadFileIntoMemory(struct State8080* stt, FILE* rom, uint32_t startingAddress)
+void ReadFileIntoMemory(struct State8080* stt, FILE* rom, int startingAddress)
 {
 	
 	fseek(rom, 0, SEEK_END);

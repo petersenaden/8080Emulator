@@ -112,7 +112,7 @@ void DCRInstruction(struct State8080* stt, unsigned char* byteOne)
 	{
 		stt->sf.cy = 1;
 	}
-	(*byteOne) = (unsigned char)((*byteOne) + 0b11111111);
+	(*byteOne) = (unsigned char)((*byteOne)--);
 	CheckFlags(stt, (*byteOne), true, true, true);
 	// check endianness
 	// Only way AC can be set if is LS 4 bits are zero. 
@@ -486,11 +486,18 @@ void POPInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 
 void JNZInstruction(struct State8080* stt)
 {
-	if (stt->sf.z)
+	if (stt->sf.z == 0)
 	{
-		unsigned char *currOperation = &(stt->memory[stt->pc]);
-		unsigned short int addressToUse = (short unsigned int)((currOperation[2] << 8) | currOperation[1]);
-		stt->pc = addressToUse;
+		// unsigned char *currOperation = &(stt->memory[stt->pc]);
+		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
+		// printf("%x", addressToUse);
+		stt->pc = (((&(stt->memory[stt->pc]))[2] << 8) | (&(stt->memory[stt->pc]))[1]);
+	}
+	else
+	{
+		stt->pc++;
+		stt->pc++;
+		stt->pc++;
 	}
 }
 
@@ -531,9 +538,7 @@ void ADIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 
 void RETInstruction(struct State8080* stt)
 {
-	unsigned short firstAddress = (short unsigned)(stt->sp);
-	unsigned short secondAddress = (short unsigned)(stt->sp + 1);
-	stt->pc = (unsigned short)(stt->memory[firstAddress] << 8 | stt->memory[secondAddress]);
+	stt->pc = (unsigned short)(stt->memory[stt->sp + 1] << 8 | stt->memory[stt->sp]);
 	++stt->sp;
 	++stt->sp;
 }
@@ -543,7 +548,7 @@ void CALLInstruction(struct State8080* stt)
 	unsigned char newPCHighByte = stt->memory[stt->pc + 2];
 	unsigned char newPCLowByte = stt->memory[stt->pc + 1];
 	unsigned char firstValue = (unsigned char)(stt->pc >> 8);
-	unsigned char secondValue = (unsigned char)(stt->pc & 0b11111111);
+	unsigned char secondValue = (unsigned char)(stt->pc--);
 	stt->memory[stt->sp -1] = firstValue;
 	stt->memory[stt->sp -2] = secondValue;
 	stt->pc = (unsigned short)(((newPCHighByte) << 8) | (newPCLowByte));

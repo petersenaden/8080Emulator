@@ -21,7 +21,7 @@ mainBuild: 8080Disassembler.o 8080Emulation.o 8080InstructionSet.o
 	$(CCom) $(CFlags) -c 8080InstructionSet.cpp
 
 clean:
-	rm -f 8080Emulation.o 8080Disassembler.o 8080InstructionSet.o
+	rm -f 8080Emulation.o 8080Disassembler.o 8080InstructionSet.o 8080SpaceInvaders.o 
 	
 clearScr:
 	clear
