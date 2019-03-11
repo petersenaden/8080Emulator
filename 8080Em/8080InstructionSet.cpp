@@ -552,11 +552,6 @@ void CALLInstruction(struct State8080* stt)
 	--stt->sp;
 }
 
-void OUTInstruction()
-{
-	//TODO
-}
-
 void ANIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
 {
 	unsigned char dataToAnd = stt->memory[stt->pc + 1];
@@ -608,9 +603,14 @@ void PUSHPSWInstruction(struct State8080* stt)
 	--stt->sp;
 }
 
-void EIInstruction()
+void EIInstruction(struct State8080* stt)
 {
-	// TODO
+	stt->interrupt_enable = true;
+}
+
+void DIInstruction(struct State8080* stt)
+{
+	stt->interrupt_enable = false;
 }
 
 void CPIInstruction(struct State8080* stt, unsigned char* byteOne)
@@ -625,6 +625,30 @@ void CPIInstruction(struct State8080* stt, unsigned char* byteOne)
 	//do aux carry
 	
 	++stt->pc;
+}
+
+void INInstruction(struct State8080* stt, unsigned char* byteOne)
+{
+	unsigned char parameterOne = stt->memory[stt->pc + 1];	
+	(*byteOne) = ProcessInput(parameterOne);
+	stt->pc++;
+}
+
+void OUTInstruction(struct State8080* stt)
+{
+	unsigned char parameterOne = stt->memory[stt->pc + 1];	
+	ProcessOutput(parameterOne);
+	stt->pc++;
+}
+
+unsigned char ProcessInput(unsigned char byteOne)
+{
+	return byteOne;
+}
+
+unsigned char ProcessOutput(unsigned char byteOne)
+{
+	return byteOne;
 }
 
 

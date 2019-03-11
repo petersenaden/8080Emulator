@@ -47,10 +47,14 @@ void PUSHInstruction(struct State8080* stt, unsigned char* byteOne, unsigned cha
 void ADIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo);
 void RETInstruction(struct State8080* stt);
 void CALLInstruction(struct State8080* stt);
-void OUTInstruction();
 void ANIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo);
 void EXCHANGEInstruction(unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree, unsigned char* byteFour);
 void POPPSWInstruction(struct State8080* stt);
 void PUSHPSWInstruction(struct State8080* stt);
-void EIInstruction();
+void EIInstruction(struct State8080* stt);
+void DIInstruction(struct State8080* stt);
 void CPIInstruction(struct State8080* stt, unsigned char* byteOne);
+void INInstruction(struct State8080* stt, unsigned char* byteOne);
+void OUTInstruction(struct State8080* stt);
+unsigned char ProcessInput(unsigned char byteOne);
+unsigned char ProcessOutput(unsigned char byteOne);

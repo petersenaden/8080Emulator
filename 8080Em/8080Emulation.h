@@ -30,3 +30,9 @@ struct State8080
 struct State8080* Initialize8080StateStruct(struct State8080 *st);
 
 void Execute8080Op(struct State8080 *stt);
+
+int fopen_safe2(FILE **f, const char *name, const char *mode);
+
+unsigned char GetNextByteForMemory(FILE* rom);
+
+void ReadFileIntoMemory(struct State8080* stt, FILE* rom, uint32_t startingAddress);

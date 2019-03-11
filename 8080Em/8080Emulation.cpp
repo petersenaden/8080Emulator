@@ -53,7 +53,7 @@ struct State8080* Initialize8080StateStruct(struct State8080 *st)
 void Execute8080Op(struct State8080 *stt)
 {
 	unsigned char *currOp = &(stt->memory[stt->pc]);
-	printf("0x%02X\n", *currOp);
+	//printf("0x%02X\n", *currOp);
 	switch (*currOp)
 	{
 		case 0x00:								  break; // NOP
@@ -780,7 +780,7 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xa4: UnimplementedInstruction(stt); break;
 		case 0xa5: UnimplementedInstruction(stt); break;
 		case 0xa6: UnimplementedInstruction(stt); break;
-		case 0xa7: UnimplementedInstruction(stt);
+		case 0xa7:
 		{
 			ANAInstruction(stt, &(stt->a), &(stt->a), &(stt->a));
 			break;
@@ -792,7 +792,7 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xac: UnimplementedInstruction(stt); break;
 		case 0xad: UnimplementedInstruction(stt); break;
 		case 0xae: UnimplementedInstruction(stt); break;
-		case 0xaf: UnimplementedInstruction(stt);
+		case 0xaf:
 		{
 			XRAInstruction(stt, &(stt->a), &(stt->a), &(stt->a));
 			break;
@@ -814,12 +814,12 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xbe: UnimplementedInstruction(stt); break;
 		case 0xbf: UnimplementedInstruction(stt); break;
 		case 0xc0: UnimplementedInstruction(stt); break;
-		case 0xc1: UnimplementedInstruction(stt);
+		case 0xc1:
 		{
 			POPInstruction(stt, &(stt->c), &(stt->b));
 			break;
 		}
-		case 0xc2: UnimplementedInstruction(stt);
+		case 0xc2:
 		{
 			JNZInstruction(stt);
 			break;
@@ -842,7 +842,7 @@ void Execute8080Op(struct State8080 *stt)
 		}
 		case 0xc7: UnimplementedInstruction(stt); break;
 		case 0xc8: UnimplementedInstruction(stt); break;
-		case 0xc9: UnimplementedInstruction(stt);
+		case 0xc9:
 		{
 			RETInstruction(stt);
 			break;
@@ -850,7 +850,7 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xca: UnimplementedInstruction(stt); break;
 		case 0xcb: UnimplementedInstruction(stt); break;
 		case 0xcc: UnimplementedInstruction(stt); break;
-		case 0xcd: UnimplementedInstruction(stt);
+		case 0xcd:
 		{
 			CALLInstruction(stt);
 			break;
@@ -858,19 +858,19 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xce: UnimplementedInstruction(stt); break;
 		case 0xcf: UnimplementedInstruction(stt); break;
 		case 0xd0: UnimplementedInstruction(stt); break;
-		case 0xd1: UnimplementedInstruction(stt);
+		case 0xd1:
 		{
 			POPInstruction(stt, &(stt->e), &(stt->d));
 			break;
 		}
 		case 0xd2: UnimplementedInstruction(stt); break;
-		case 0xd3: UnimplementedInstruction(stt);
+		case 0xd3:
 		{
-			OUTInstruction();
+			OUTInstruction(stt);
 			break;
 		}
 		case 0xd4: UnimplementedInstruction(stt); break;
-		case 0xd5: UnimplementedInstruction(stt);
+		case 0xd5:
 		{
 			PUSHInstruction(stt, &(stt->e), &(stt->d));
 			break;
@@ -880,13 +880,17 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xd8: UnimplementedInstruction(stt); break;
 		case 0xd9: UnimplementedInstruction(stt); break;
 		case 0xda: UnimplementedInstruction(stt); break;
-		case 0xdb: UnimplementedInstruction(stt); break;
+		case 0xdb:
+		{
+			INInstruction(stt, &(stt->a));
+			break;
+		}
 		case 0xdc: UnimplementedInstruction(stt); break;
 		case 0xdd: UnimplementedInstruction(stt); break;
 		case 0xde: UnimplementedInstruction(stt); break;
 		case 0xdf: UnimplementedInstruction(stt); break;
 		case 0xe0: UnimplementedInstruction(stt); break;
-		case 0xe1: UnimplementedInstruction(stt);
+		case 0xe1:
 		{
 			POPInstruction(stt, &(stt->l), &(stt->h));
 			break;
@@ -894,12 +898,12 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xe2: UnimplementedInstruction(stt); break;
 		case 0xe3: UnimplementedInstruction(stt); break;
 		case 0xe4: UnimplementedInstruction(stt); break;
-		case 0xe5: UnimplementedInstruction(stt);
+		case 0xe5:
 		{
 			PUSHInstruction(stt, &(stt->l), &(stt->h));
 			break;
 		}
-		case 0xe6: UnimplementedInstruction(stt);
+		case 0xe6:
 		{
 			ANIInstruction(stt, &(stt->a), &(stt->a));
 			break;
@@ -908,7 +912,7 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xe8: UnimplementedInstruction(stt); break;
 		case 0xe9: UnimplementedInstruction(stt); break;
 		case 0xea: UnimplementedInstruction(stt); break;
-		case 0xeb: UnimplementedInstruction(stt);
+		case 0xeb:
 		{
 			EXCHANGEInstruction(&(stt->h), &(stt->d), &(stt->l), &(stt->e));
 			break;
@@ -918,15 +922,19 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xee: UnimplementedInstruction(stt); break;
 		case 0xef: UnimplementedInstruction(stt); break;
 		case 0xf0: UnimplementedInstruction(stt); break;
-		case 0xf1: UnimplementedInstruction(stt);
+		case 0xf1:
 		{
 			POPPSWInstruction(stt);
 			break;
 		}
 		case 0xf2: UnimplementedInstruction(stt); break;
-		case 0xf3: UnimplementedInstruction(stt); break;
+		case 0xf3:
+		{
+			DIInstruction(stt);
+			break;
+		}
 		case 0xf4: UnimplementedInstruction(stt); break;
-		case 0xf5: UnimplementedInstruction(stt);
+		case 0xf5:
 		{
 			PUSHPSWInstruction(stt);
 			break;
@@ -936,14 +944,14 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xf8: UnimplementedInstruction(stt); break;
 		case 0xf9: UnimplementedInstruction(stt); break;
 		case 0xfa: UnimplementedInstruction(stt); break;
-		case 0xfb: UnimplementedInstruction(stt);
+		case 0xfb:
 		{
-			EIInstruction();
+			EIInstruction(stt);
 			break;
 		}
 		case 0xfc: UnimplementedInstruction(stt); break;
 		case 0xfd: UnimplementedInstruction(stt); break;
-		case 0xfe: UnimplementedInstruction(stt);
+		case 0xfe:
 		{
 			CPIInstruction(stt, &(stt->a));
 			break;
@@ -951,7 +959,7 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xff: UnimplementedInstruction(stt); break;
 		default:   UnimplementedInstruction(stt); break;
 	}
-	stt->pc++;
+		stt->pc++;
 }
 
 unsigned char GetNextByteForMemory(FILE* rom)
@@ -972,7 +980,7 @@ void ReadFileIntoMemory(struct State8080* stt, FILE* rom, uint32_t startingAddre
 	fseek(rom, 0, SEEK_END);
 	long int fSize = ftell(rom);
 	fseek(rom, 0, SEEK_SET);
-	fread(stt->memory, sizeof &stt->memory[startingAddress], fSize, rom);
+	fread(&(stt->memory[startingAddress]), fSize, 1, rom);
 	fclose(rom);
 	// for(;;)
 	// {
@@ -986,35 +994,23 @@ void ReadFileIntoMemory(struct State8080* stt, FILE* rom, uint32_t startingAddre
 	
 }
 
-int main(int argc, char**argv)
+int enterMain(int argc, char**argv)
 {
 	(void)argc;
-	FILE* rom0;
-	FILE* rom1;
-	FILE* rom2;
-	FILE* rom3;
-	if (fopen_safe2(&rom0, argv[1], "rb") != 0)
-	{
-		exit(EXIT_FAILURE);
-	} 
-	if (fopen_safe2(&rom1, argv[2], "rb") != 0)
-	{
-		exit(EXIT_FAILURE);
-	}
-	if (fopen_safe2(&rom2, argv[3], "rb") != 0)
-	{
-		exit(EXIT_FAILURE);
-	}
-	if (fopen_safe2(&rom3, argv[4], "rb") != 0)
-	{
-		exit(EXIT_FAILURE);
-	}
 	struct State8080* gameState = Initialize8080StateStruct((struct State8080*)calloc(1, sizeof(struct State8080)));
-	ReadFileIntoMemory(gameState, rom0, 0);
-	ReadFileIntoMemory(gameState, rom1, 0x800);
-	ReadFileIntoMemory(gameState, rom2, 0x1000);
-	ReadFileIntoMemory(gameState, rom3, 0x1800);
-	for (int i = 0; i < 10000; i++)
+	assert(argc % 2 == 1);
+	for (int i = 1; i < argc; i += 2)
+	{
+		FILE* rom;
+		int offset = (int)strtol(argv[i + 1], NULL, 16);
+		if (fopen_safe2(&rom, argv[i], "rb") != 0)
+		{
+			exit(EXIT_FAILURE);
+		}
+		ReadFileIntoMemory(gameState, rom, offset);
+
+	}
+ 	for (;;)
 	{
 		Execute8080Op(gameState);
 	}

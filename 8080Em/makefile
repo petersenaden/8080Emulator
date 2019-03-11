@@ -3,6 +3,7 @@ CCom = g++
 CFlags = -Wall -Wextra -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wcast-align -Wstrict-overflow=5 -Wwrite-strings -Waggregate-return -Wswitch-default -Wconversion
 OutputFileWithOFlag = -o 8080Emu
 OutputFile = 8080Emu
+SIArgs = ./SI_ROM/invaders_h.rom 0x0 ./SI_ROM/invaders_g.rom 0x800 ./SI_ROM/invaders_f.rom 0x1000 ./SI_ROM/invaders_e.rom 0x1800
 
 #targets
 all: clearScr mainBuild clean
@@ -26,4 +27,11 @@ clearScr:
 	clear
 	
 run:
-	./$(OutputFile) ./SI_ROM/invaders_e.rom ./SI_ROM/invaders_f.rom ./SI_ROM/invaders_g.rom ./SI_ROM/invaders_h.rom
+	./$(OutputFile) $(SIArgs)
+	
+8080SpaceInvaders.o: 8080SpaceInvaders.cpp
+	$(CCom) -c 8080SpaceInvaders.cpp -Iusr/include/
+	
+runSI: 8080SpaceInvaders.o 8080Disassembler.o 8080Emulation.o 8080InstructionSet.o
+	$(CCom) 8080SpaceInvaders.o 8080Disassembler.o 8080Emulation.o 8080InstructionSet.o -o SIApp -lsfml-graphics -lsfml-window -lsfml-system
+	./SIApp $(SIArgs)
