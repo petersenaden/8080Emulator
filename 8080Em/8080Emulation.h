@@ -1,5 +1,3 @@
-
-
 struct StateFlags 
 {
 	char z;
