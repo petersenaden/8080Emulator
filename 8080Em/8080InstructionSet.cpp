@@ -112,7 +112,7 @@ void DCRInstruction(struct State8080* stt, unsigned char* byteOne)
 	{
 		stt->sf.cy = 1;
 	}
-	(*byteOne) = (unsigned char)((*byteOne)--);
+	--(*byteOne);
 	CheckFlags(stt, (*byteOne), true, true, true);
 	// check endianness
 	// Only way AC can be set if is LS 4 bits are zero. 
@@ -538,22 +538,19 @@ void ADIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 
 void RETInstruction(struct State8080* stt)
 {
-	stt->pc = (unsigned short)(stt->memory[stt->sp + 1] << 8 | stt->memory[stt->sp]);
+	stt->pc = (unsigned short)((stt->memory[stt->sp + 1] << 8) | stt->memory[stt->sp]);
 	++stt->sp;
 	++stt->sp;
 }
 
+// 8080 manual doc is weak on this instruction
 void CALLInstruction(struct State8080* stt)
 {
-	unsigned char newPCHighByte = stt->memory[stt->pc + 2];
-	unsigned char newPCLowByte = stt->memory[stt->pc + 1];
-	unsigned char firstValue = (unsigned char)(stt->pc >> 8);
-	unsigned char secondValue = (unsigned char)(stt->pc--);
-	stt->memory[stt->sp -1] = firstValue;
-	stt->memory[stt->sp -2] = secondValue;
-	stt->pc = (unsigned short)(((newPCHighByte) << 8) | (newPCLowByte));
-	--stt->sp;
-	--stt->sp;
+ 	stt->memory[stt->sp - 1] = (unsigned char)(((stt->pc+2) >> 8) & 0xff);
+	stt->memory[stt->sp - 2] = (unsigned char)((stt->pc+2) & 0b11111111);
+	stt->pc = (unsigned short)((( stt->memory[stt->pc + 2]) << 8) | (stt->memory[stt->pc + 1]));
+	stt->sp--;
+	stt->sp--;
 }
 
 void ANIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)

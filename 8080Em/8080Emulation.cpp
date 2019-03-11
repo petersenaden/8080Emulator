@@ -848,7 +848,6 @@ void Execute8080Op(struct State8080 *stt)
 		case 0xc9:
 		{
 			RETInstruction(stt);
-			return;
 			break;
 		}
 		case 0xca: UnimplementedInstruction(stt); break;

@@ -80,32 +80,42 @@ int main(int argc, char *argv[])
 	const unsigned int W = 256;
 	const unsigned int H = 224;
 	
-    sf::RenderWindow window(sf::VideoMode(W, H, 32), "Space Invaders");
-    sf::Uint8        *pixels  = new sf::Uint8[W * H * 4];
+    sf::RenderWindow window(sf::VideoMode(W, H), "Space Invaders");
+    sf::Uint8        *pixels  = new sf::Uint8[W * H]; 
+	window.clear();
+	window.setFramerateLimit(60);
+	sf::VertexArray pointmap(sf::Points, 256 * 240);
 
 	while (window.isOpen())
     {
 		Execute8080Op(gameState);
 		int currArrPos = 0;
-		for(int i = 0x2400; i < 0x3fff; ++i)
+		for(register int i = 0x2400; i < 0x3fff; ++i)
 		{
 			unsigned char currByte = gameState->memory[i];
-			for (int j = 0; j < 8; j++)
+			for (register int j = 0; j < 8; j++)
 			{
 				unsigned char currBit = (currByte >> j) & 1;
-				SetColorOfPixel(pixels, currArrPos, currBit);
-				currArrPos += 4;
+				int a = i + j - 0x2400;
+				pointmap[a].position = sf::Vector2f(a % 256,a / 256);
+				pointmap[a].color = currBit ? sf::Color::White : sf::Color::Black;
+				if (currBit)
+				printf("%d\n", a);
+				//SetColorOfPixel(pixels, currArrPos, currBit);
+				//currArrPos ++;
 			}
 		}
-		sf::Texture texture;
-		texture.create(W, H); 
-		sf::Sprite sprite(texture); // needed to draw the texture on screen
-		texture.create(W, H); 
-		texture.update(pixels);
-		window.clear();
-		window.draw(sprite);
-		window.display();
+		// sf::Texture texture;
+		// sf::Sprite sprite(texture); // needed to draw the texture on screen
+		// texture.create(W, H);
+		// texture.update(pixels);
+		// window.clear();
+		// window.draw(sprite);
+		// window.display();
 		sf::Event event;
+		window.clear();
+		window.draw(pointmap);
+		window.display();
         while (window.pollEvent(event))
         {
             // Close window : exit
