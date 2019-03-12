@@ -2,6 +2,7 @@
 #include<stdint.h>
 #include<stdio.h>
 #include<assert.h>
+#include<unistd.h>
 #include<errno.h>
 #ifndef EMULATION8080
 #define EMULATION8080
@@ -12,6 +13,8 @@
 #define INSTRUCTIONSET8080
 #include "8080InstructionSet.h"
 #endif
+
+#define PRINTOP false
 
 int fopen_safe2(FILE **f, const char *name, const char *mode) {
     int ret = 0;
@@ -45,7 +48,7 @@ struct State8080* Initialize8080StateStruct(struct State8080 *st)
 	st->interrupt_enable = 0;
 	st->sp = 0;
 	st->pc = 0;
-	st->memory = (unsigned char*)(calloc(16000, sizeof(unsigned char)));
+	st->memory = (unsigned char*)(calloc(65536, sizeof(unsigned char)));
 	InitializeStateFlagsStruct(&(st->sf));
 	return st;
 }
@@ -53,8 +56,10 @@ struct State8080* Initialize8080StateStruct(struct State8080 *st)
 void Execute8080Op(struct State8080 *stt)
 {
 	unsigned char *currOp = &(stt->memory[stt->pc]);
+	#ifdef PRINTOP
 	printf("SP:        0x%02X\t", stt->pc);
 	printf("Operation: 0x%02X\n", *currOp);
+	#endif
 	switch (*currOp)
 	{
 		case 0x00:								  break; // NOP

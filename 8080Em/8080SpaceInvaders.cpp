@@ -17,47 +17,47 @@
 
 void SetColorOfPixel(sf::Uint8* pixels, int currArrPos, int currBit)
 {
-	if (!currBit)
+	if (currBit)
 	{
-		pixels[currArrPos] = 100;
-		pixels[currArrPos+1] = 100;
-		pixels[currArrPos+2] = 100;
-		pixels[currArrPos+3] = 100;
+		pixels[currArrPos] = 255;
+		pixels[currArrPos+1] = 255;
+		pixels[currArrPos+2] = 255;
+		pixels[currArrPos+3] = 255;
 	}
 	else if (currArrPos < (32 * 240) && currArrPos >= (0))
 	{
-		pixels[currArrPos] = 255;
-		pixels[currArrPos+1] = 255;
-		pixels[currArrPos+2] = 255;
-		pixels[currArrPos+3] = 0;
+		pixels[currArrPos] = 0;
+		pixels[currArrPos+1] = 0;
+		pixels[currArrPos+2] = 0;
+		pixels[currArrPos+3] = 255;
 	}
 	else if (currArrPos < (64 * 240) && currArrPos >= (32 * 240))
 	{
-		pixels[currArrPos] = 255;
+		pixels[currArrPos] = 0;
 		pixels[currArrPos+1] = 0;
 		pixels[currArrPos+2] = 0;
-		pixels[currArrPos+3] = 0;
+		pixels[currArrPos+3] = 255;
 	}
 	else if (currArrPos < (184 * 240) && currArrPos >= (64 * 240))
 	{
-		pixels[currArrPos] = 255;
-		pixels[currArrPos+1] = 255;
-		pixels[currArrPos+2] = 255;
-		pixels[currArrPos+3] = 0;
+		pixels[currArrPos] = 0;
+		pixels[currArrPos+1] = 0;
+		pixels[currArrPos+2] = 0;
+		pixels[currArrPos+3] = 255;
 	}
 	else if (currArrPos < (240 * 240) && currArrPos >= (184 * 240))
 	{
 		pixels[currArrPos] = 0;
-		pixels[currArrPos+1] = 128;
+		pixels[currArrPos+1] = 0;
 		pixels[currArrPos+2] = 0;
-		pixels[currArrPos+3] = 0;
+		pixels[currArrPos+3] = 255;
 	}
 	else if (currArrPos >= (240 * 240))
 	{
-		pixels[currArrPos] = 255;
-		pixels[currArrPos+1] = 255;
-		pixels[currArrPos+2] = 255;
-		pixels[currArrPos+3] = 0;
+		pixels[currArrPos] = 0;
+		pixels[currArrPos+1] = 0;
+		pixels[currArrPos+2] = 0;
+		pixels[currArrPos+3] = 255;
 	}
 }
 
@@ -80,11 +80,8 @@ int main(int argc, char *argv[])
 	const unsigned int W = 256;
 	const unsigned int H = 224;
 	
-    sf::RenderWindow window(sf::VideoMode(W, H), "Space Invaders");
-    sf::Uint8        *pixels  = new sf::Uint8[W * H]; 
-	window.clear();
-	window.setFramerateLimit(60);
-	sf::VertexArray pointmap(sf::Points, 256 * 240);
+    sf::RenderWindow window(sf::VideoMode(W, H, 32), "Space Invaders");
+    sf::Uint8 pixels[W * H * 4] = {0}; 
 
 	while (window.isOpen())
     {
@@ -96,26 +93,20 @@ int main(int argc, char *argv[])
 			for (register int j = 0; j < 8; j++)
 			{
 				unsigned char currBit = (currByte >> j) & 1;
-				int a = i + j - 0x2400;
-				pointmap[a].position = sf::Vector2f(a % 256,a / 256);
-				pointmap[a].color = currBit ? sf::Color::White : sf::Color::Black;
-				if (currBit)
-				printf("%d\n", a);
-				//SetColorOfPixel(pixels, currArrPos, currBit);
-				//currArrPos ++;
+				if (currBit) printf("hui");
+				SetColorOfPixel(pixels, currArrPos, currBit);
+				currArrPos+=4;
 			}
 		}
-		// sf::Texture texture;
-		// sf::Sprite sprite(texture); // needed to draw the texture on screen
-		// texture.create(W, H);
-		// texture.update(pixels);
-		// window.clear();
-		// window.draw(sprite);
-		// window.display();
-		sf::Event event;
+		sf::Texture texture;
+		texture.create(W, H);
+		sf::Sprite sprite(texture); // needed to draw the texture on screen
+		texture.create(W, H);
+		texture.update(pixels);
 		window.clear();
-		window.draw(pointmap);
+		window.draw(sprite);
 		window.display();
+		sf::Event event;
         while (window.pollEvent(event))
         {
             // Close window : exit
@@ -124,6 +115,6 @@ int main(int argc, char *argv[])
         }
 	}
 
-    delete [] pixels;
+    //delete [] pixels;
     return 0;
 }
