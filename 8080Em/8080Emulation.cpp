@@ -1017,23 +1017,104 @@ void Execute8080Op(struct State8080 *stt)
 			XRAInstruction(stt, &(stt->a), &(stt->a), &(stt->a));
 			break;
 		}
-		case 0xb0: UnimplementedInstruction(stt); break;
-		case 0xb1: UnimplementedInstruction(stt); break;
-		case 0xb2: UnimplementedInstruction(stt); break;
-		case 0xb3: UnimplementedInstruction(stt); break;
-		case 0xb4: UnimplementedInstruction(stt); break;
-		case 0xb5: UnimplementedInstruction(stt); break;
-		case 0xb6: UnimplementedInstruction(stt); break;
-		case 0xb7: UnimplementedInstruction(stt); break;
-		case 0xb8: UnimplementedInstruction(stt); break;
-		case 0xb9: UnimplementedInstruction(stt); break;
-		case 0xba: UnimplementedInstruction(stt); break;
-		case 0xbb: UnimplementedInstruction(stt); break;
-		case 0xbc: UnimplementedInstruction(stt); break;
-		case 0xbd: UnimplementedInstruction(stt); break;
-		case 0xbe: UnimplementedInstruction(stt); break;
-		case 0xbf: UnimplementedInstruction(stt); break;
-		case 0xc0: UnimplementedInstruction(stt); break;
+		case 0xb0:
+		{
+			ORAInstruction(stt, &(stt->a), &(stt->a), &(stt->b));
+			break;
+		}
+		case 0xb1:
+		{
+			ORAInstruction(stt, &(stt->a), &(stt->a), &(stt->c));
+			break;
+		}
+		case 0xb2:
+		{
+			ORAInstruction(stt, &(stt->a), &(stt->a), &(stt->d));
+			break;
+		}
+		case 0xb3:
+		{
+			ORAInstruction(stt, &(stt->a), &(stt->a), &(stt->e));
+			break;
+		}
+		case 0xb4:
+		{
+			ORAInstruction(stt, &(stt->a), &(stt->a), &(stt->h));
+			break;
+		}
+		case 0xb5:
+		{
+			ORAInstruction(stt, &(stt->a), &(stt->a), &(stt->l));
+			break;
+		}
+		case 0xb6:
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			ORAInstruction(stt, &(stt->a), &(stt->a), charToManipulate);
+			break;
+		}
+		case 0xb7:
+		{
+			ORAInstruction(stt, &(stt->a), &(stt->a), &(stt->a));
+			break;
+		}
+		case 0xb8:
+		{
+			CMPInstruction(stt, &(stt->a), &(stt->b));
+			break;
+		}
+		case 0xb9:
+		{
+			CMPInstruction(stt, &(stt->a), &(stt->c));
+			break;
+		}
+		case 0xba:
+		{
+			CMPInstruction(stt, &(stt->a), &(stt->d));
+			break;
+		}
+		case 0xbb:
+		{
+			CMPInstruction(stt, &(stt->a), &(stt->e));
+			break;
+		}
+		case 0xbc:
+		{
+			CMPInstruction(stt, &(stt->a), &(stt->h));
+			break;
+		}
+		case 0xbd:
+		{
+			CMPInstruction(stt, &(stt->a), &(stt->l));
+			break;
+		}
+		case 0xbe:
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			CMPInstruction(stt, &(stt->a), charToManipulate);
+			break;
+		}
+		case 0xbf:
+		{
+			CMPInstruction(stt, &(stt->a), &(stt->a));
+			break;
+		}
+		case 0xc0:
+		{
+			if (!(stt->sf.z))
+			{
+				RETInstruction(stt);
+			}
+			break;
+		}
 		case 0xc1:
 		{
 			POPInstruction(stt, &(stt->c), &(stt->b));
@@ -1051,7 +1132,15 @@ void Execute8080Op(struct State8080 *stt)
 			return;
 			break;
 		}
-		case 0xc4: UnimplementedInstruction(stt); break;
+		case 0xc4:
+		{
+			if (!(stt->sf.z))
+			{
+				CALLInstruction(stt);
+				return;
+			}
+			break;
+		}
 		case 0xc5:
 		{
 			PUSHInstruction(stt, &(stt->c), &(stt->b));
