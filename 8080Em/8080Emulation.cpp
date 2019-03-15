@@ -747,57 +747,271 @@ void Execute8080Op(struct State8080 *stt)
 			MOVInstruction(&(stt->a), &(stt->a));
 			break;
 		}
-		case 0x80: UnimplementedInstruction(stt); break;
-		case 0x81: UnimplementedInstruction(stt); break;
-		case 0x82: UnimplementedInstruction(stt); break;
-		case 0x83: UnimplementedInstruction(stt); break;
-		case 0x84: UnimplementedInstruction(stt); break;
-		case 0x85: UnimplementedInstruction(stt); break;
-		case 0x86: UnimplementedInstruction(stt); break;
-		case 0x87: UnimplementedInstruction(stt); break;
-		case 0x88: UnimplementedInstruction(stt); break;
-		case 0x89: UnimplementedInstruction(stt); break;
-		case 0x8a: UnimplementedInstruction(stt); break;
-		case 0x8b: UnimplementedInstruction(stt); break;
-		case 0x8c: UnimplementedInstruction(stt); break;
-		case 0x8d: UnimplementedInstruction(stt); break;
-		case 0x8e: UnimplementedInstruction(stt); break;
-		case 0x8f: UnimplementedInstruction(stt); break;
-		case 0x90: UnimplementedInstruction(stt); break;
-		case 0x91: UnimplementedInstruction(stt); break;
-		case 0x92: UnimplementedInstruction(stt); break;
-		case 0x93: UnimplementedInstruction(stt); break;
-		case 0x94: UnimplementedInstruction(stt); break;
-		case 0x95: UnimplementedInstruction(stt); break;
-		case 0x96: UnimplementedInstruction(stt); break;
-		case 0x97: UnimplementedInstruction(stt); break;
-		case 0x98: UnimplementedInstruction(stt); break;
-		case 0x99: UnimplementedInstruction(stt); break;
-		case 0x9a: UnimplementedInstruction(stt); break;
-		case 0x9b: UnimplementedInstruction(stt); break;
-		case 0x9c: UnimplementedInstruction(stt); break;
-		case 0x9d: UnimplementedInstruction(stt); break;
-		case 0x9e: UnimplementedInstruction(stt); break;
-		case 0x9f: UnimplementedInstruction(stt); break;
-		case 0xa0: UnimplementedInstruction(stt); break;
-		case 0xa1: UnimplementedInstruction(stt); break;
-		case 0xa2: UnimplementedInstruction(stt); break;
-		case 0xa3: UnimplementedInstruction(stt); break;
-		case 0xa4: UnimplementedInstruction(stt); break;
-		case 0xa5: UnimplementedInstruction(stt); break;
-		case 0xa6: UnimplementedInstruction(stt); break;
+		case 0x80: 
+		{
+			ADDInstruction(stt, &(stt->a), &(stt->a), &(stt->b));
+			break;
+		}
+		case 0x81: 
+		{
+			ADDInstruction(stt, &(stt->a), &(stt->a), &(stt->c));
+			break;
+		}
+		case 0x82: 
+		{
+			ADDInstruction(stt, &(stt->a), &(stt->a), &(stt->d));
+			break;
+		}
+		case 0x83: 
+		{
+			ADDInstruction(stt, &(stt->a), &(stt->a), &(stt->e));
+			break;
+		}
+		case 0x84: 
+		{
+			ADDInstruction(stt, &(stt->a), &(stt->a), &(stt->h));
+			break;
+		}
+		case 0x85: 
+		{
+			ADDInstruction(stt, &(stt->a), &(stt->a), &(stt->l));
+			break;
+		}
+		case 0x86: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			ADDInstruction(stt, &(stt->a), &(stt->a), charToManipulate);
+			break;
+		}
+		case 0x87: 
+		{
+			ADDInstruction(stt, &(stt->a), &(stt->a), &(stt->a));
+			break;
+		}
+		case 0x88: 
+		{
+			ADCInstruction(stt, &(stt->a), &(stt->a), &(stt->b));
+			break;
+		}
+		case 0x89: 
+		{
+			ADCInstruction(stt, &(stt->a), &(stt->a), &(stt->c));
+			break;
+		}
+		case 0x8a: 
+		{
+			ADCInstruction(stt, &(stt->a), &(stt->a), &(stt->d));
+			break;
+		}
+		case 0x8b: 
+		{
+			ADCInstruction(stt, &(stt->a), &(stt->a), &(stt->e));
+			break;
+		}
+		case 0x8c: 
+		{
+			ADCInstruction(stt, &(stt->a), &(stt->a), &(stt->h));
+			break;
+		}
+		case 0x8d: 
+		{
+			ADCInstruction(stt, &(stt->a), &(stt->a), &(stt->l));
+			break;
+		}
+		case 0x8e: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			ADCInstruction(stt, &(stt->a), &(stt->a), charToManipulate);
+			break;
+		}
+		case 0x8f: 
+		{
+			ADCInstruction(stt, &(stt->a), &(stt->a), &(stt->a));
+			break;
+		}
+		case 0x90: 
+		{
+			SUBInstruction(stt, &(stt->a), &(stt->a), &(stt->b));
+			break;
+		}
+		case 0x91: 
+		{
+			SUBInstruction(stt, &(stt->a), &(stt->a), &(stt->c));
+			break;
+		}
+		case 0x92: 
+		{
+			SUBInstruction(stt, &(stt->a), &(stt->a), &(stt->d));
+			break;
+		}
+		case 0x93: 
+		{
+			SUBInstruction(stt, &(stt->a), &(stt->a), &(stt->e));
+			break;
+		}
+		case 0x94: 
+		{
+			SUBInstruction(stt, &(stt->a), &(stt->a), &(stt->h));
+			break;
+		}
+		case 0x95: 
+		{
+			SUBInstruction(stt, &(stt->a), &(stt->a), &(stt->l));
+			break;
+		}
+		case 0x96: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			SUBInstruction(stt, &(stt->a), &(stt->a), charToManipulate);
+			break;
+		}
+		case 0x97: 
+		{
+			SUBInstruction(stt, &(stt->a), &(stt->a), &(stt->a));
+			break;
+		}
+		case 0x98: 
+		{
+			SBBInstruction(stt, &(stt->a), &(stt->a), &(stt->b));
+			break;
+		}
+		case 0x99: 
+		{
+			SBBInstruction(stt, &(stt->a), &(stt->a), &(stt->c));
+			break;
+		}
+		case 0x9a: 
+		{
+			SBBInstruction(stt, &(stt->a), &(stt->a), &(stt->d));
+			break;
+		}
+		case 0x9b: 
+		{
+			SBBInstruction(stt, &(stt->a), &(stt->a), &(stt->e));
+			break;
+		}
+		case 0x9c: 
+		{
+			SBBInstruction(stt, &(stt->a), &(stt->a), &(stt->h));
+			break;
+		}
+		case 0x9d: 
+		{
+			SBBInstruction(stt, &(stt->a), &(stt->a), &(stt->l));
+			break;
+		}
+		case 0x9e: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			SBBInstruction(stt, &(stt->a), &(stt->a), charToManipulate);
+			break;
+		}
+		case 0x9f: 
+		{
+			SBBInstruction(stt, &(stt->a), &(stt->a), &(stt->a));
+			break;
+		}
+		case 0xa0: 
+		{
+			ANAInstruction(stt, &(stt->a), &(stt->a), &(stt->b));
+			break;
+		}
+		case 0xa1: 
+		{
+			ANAInstruction(stt, &(stt->a), &(stt->a), &(stt->c));
+			break;
+		}
+		case 0xa2: 
+		{
+			ANAInstruction(stt, &(stt->a), &(stt->a), &(stt->d));
+			break;
+		}
+		case 0xa3: 
+		{
+			ANAInstruction(stt, &(stt->a), &(stt->a), &(stt->e));
+			break;
+		}
+		case 0xa4: 
+		{
+			ANAInstruction(stt, &(stt->a), &(stt->a), &(stt->h));
+			break;
+		}
+		case 0xa5: 
+		{
+			ANAInstruction(stt, &(stt->a), &(stt->a), &(stt->l));
+			break;
+		}
+		case 0xa6: 
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			ANAInstruction(stt, &(stt->a), &(stt->a), charToManipulate);
+			break;
+		}
 		case 0xa7:
 		{
 			ANAInstruction(stt, &(stt->a), &(stt->a), &(stt->a));
 			break;
 		}
-		case 0xa8: UnimplementedInstruction(stt); break;
-		case 0xa9: UnimplementedInstruction(stt); break;
-		case 0xaa: UnimplementedInstruction(stt); break;
-		case 0xab: UnimplementedInstruction(stt); break;
-		case 0xac: UnimplementedInstruction(stt); break;
-		case 0xad: UnimplementedInstruction(stt); break;
-		case 0xae: UnimplementedInstruction(stt); break;
+		case 0xa8:
+		{
+			XRAInstruction(stt, &(stt->a), &(stt->a), &(stt->b));
+			break;
+		}
+		case 0xa9:
+		{
+			XRAInstruction(stt, &(stt->a), &(stt->a), &(stt->c));
+			break;
+		}
+		case 0xaa:
+		{
+			XRAInstruction(stt, &(stt->a), &(stt->a), &(stt->d));
+			break;
+		}
+		case 0xab:
+		{
+			XRAInstruction(stt, &(stt->a), &(stt->a), &(stt->e));
+			break;
+		}
+		case 0xac:
+		{
+			XRAInstruction(stt, &(stt->a), &(stt->a), &(stt->h));
+			break;
+		}
+		case 0xad:
+		{
+			XRAInstruction(stt, &(stt->a), &(stt->a), &(stt->l));
+			break;
+		}
+		case 0xae:
+		{
+			unsigned short int addressToUse = 0;
+			addressToUse = (unsigned short int)(stt->h);
+			addressToUse = (unsigned short int)(addressToUse << 8);
+			addressToUse = (unsigned short int)(addressToUse + (stt->l));
+			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
+			XRAInstruction(stt, &(stt->a), &(stt->a), charToManipulate);
+			break;
+		}
 		case 0xaf:
 		{
 			XRAInstruction(stt, &(stt->a), &(stt->a), &(stt->a));
@@ -1003,7 +1217,7 @@ void ReadFileIntoMemory(struct State8080* stt, FILE* rom, int startingAddress)
 	
 }
 
-int enterMain(int argc, char**argv)
+int main(int argc, char**argv)
 {
 	(void)argc;
 	struct State8080* gameState = Initialize8080StateStruct((struct State8080*)calloc(1, sizeof(struct State8080)));
