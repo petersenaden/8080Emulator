@@ -42,6 +42,7 @@ void ANAInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 void XRAInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree);
 void XRIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo);
 void ORAInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree);
+void ORIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo);
 void CMPInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo);
 void POPInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo);
 void JNZInstruction(struct State8080* stt);
@@ -68,6 +69,8 @@ void JPEInstruction(struct State8080* stt);
 void JPInstruction(struct State8080* stt);
 void CPInstruction(struct State8080* stt);
 void PCHLInstruction(struct State8080* stt);
+void SPHLInstruction(struct State8080* stt);
+void JMInstruction(struct State8080* stt);
 void CALLDirectInstruction(struct State8080* stt, unsigned short addressToCallTo );
 unsigned char ProcessInput(unsigned char byteOne);
 unsigned char ProcessOutput(unsigned char byteOne);

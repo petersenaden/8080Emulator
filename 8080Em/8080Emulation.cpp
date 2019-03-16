@@ -1363,7 +1363,7 @@ void Execute8080Op(struct State8080 *stt)
 		}
 		case 0xe7:
 		{
-			CALLDirectInstruction(stt, 0x020);
+			CALLDirectInstruction(stt, 0x20);
 			return;
 			break;
 		}
@@ -1414,14 +1414,13 @@ void Execute8080Op(struct State8080 *stt)
 		}
 		case 0xef:
 		{
-			CALLDirectInstruction(stt, 0x028);
+			CALLDirectInstruction(stt, 0x28);
 			return;
 			break;
 		}
 		case 0xf0:
 		{
-			// I think these parity instructions are off
-			if (stt->sf.p)
+			if (stt->sf.s == 0)
 			{
 				RETInstruction(stt);
 			}
@@ -1434,7 +1433,6 @@ void Execute8080Op(struct State8080 *stt)
 		}
 		case 0xf2:
 		{
-			// these are wrong too
 			JPInstruction(stt);
 			return;
 			break;
@@ -1455,7 +1453,11 @@ void Execute8080Op(struct State8080 *stt)
 			PUSHPSWInstruction(stt);
 			break;
 		}
-		case 0xf6: UnimplementedInstruction(stt); break;
+		case 0xf6:
+		{
+			ORIInstruction(stt, &(stt->a), &(stt->a));
+			break;
+		}
 		case 0xf7:
 		{
 			CALLDirectInstruction(stt, 0x030);
@@ -1464,29 +1466,55 @@ void Execute8080Op(struct State8080 *stt)
 		}
 		case 0xf8:
 		{
-			// I think these parity instructions are off
-			if (stt->sf.m)
+			if (stt->sf.s)
 			{
 				RETInstruction(stt);
 			}
 			break;
 		}
-		case 0xf9: UnimplementedInstruction(stt); break;
-		case 0xfa: UnimplementedInstruction(stt); break;
+		case 0xf9:
+		{
+			SPHLInstruction(stt);
+			break;
+		}
+		case 0xfa:
+		{
+			JMInstruction(stt);
+			return;
+			break;
+		}
 		case 0xfb:
 		{
 			EIInstruction(stt);
 			break;
 		}
-		case 0xfc: UnimplementedInstruction(stt); break;
+		case 0xfc:
+		{
+			if (stt->sf.s)
+			{
+				CALLInstruction(stt);
+				return; 
+			}
+			else
+			{
+				stt->pc++;
+				stt->pc++;
+			}
+			break;
+		}
 		case 0xfd: UnimplementedInstruction(stt); break;
 		case 0xfe:
 		{
 			CPIInstruction(stt, &(stt->a));
 			break;
 		}
-		case 0xff: UnimplementedInstruction(stt); break;
-		default:   UnimplementedInstruction(stt); break;
+		case 0xff:
+		{
+			CALLDirectInstruction(stt, 0x038);
+			return;
+			break;
+		}
+		default: UnimplementedInstruction(stt); break;
 	}
 	stt->pc++;
 }
@@ -1523,7 +1551,7 @@ void ReadFileIntoMemory(struct State8080* stt, FILE* rom, int startingAddress)
 	
 }
 
-int main(int argc, char**argv)
+int enterMain(int argc, char**argv)
 {
 	(void)argc;
 	struct State8080* gameState = Initialize8080StateStruct((struct State8080*)calloc(1, sizeof(struct State8080)));

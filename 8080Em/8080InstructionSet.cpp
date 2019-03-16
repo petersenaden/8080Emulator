@@ -539,6 +539,15 @@ void ORAInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 	stt->sf.cy = false;
 }
 
+void ORIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+{
+	unsigned char* byteThree = &(stt->memory[stt->pc + 1]);
+	(*byteOne) = (unsigned char)((*byteTwo) | (*byteThree));
+	CheckFlags(stt, (*byteOne), true, true, true);
+	stt->sf.cy = false;
+	stt->pc++;
+}
+
 void CMPInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
 {
 	unsigned char firstRegister = (*byteOne);
@@ -626,9 +635,26 @@ void JPEInstruction(struct State8080* stt)
 	}
 }
 
+void JMInstruction(struct State8080* stt)
+{
+	if (stt->sf.s)
+	{
+		// unsigned char *currOperation = &(stt->memory[stt->pc]);
+		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
+		// printf("%x", addressToUse);
+		stt->pc = (short unsigned int)(((&(stt->memory[stt->pc]))[2] << 8) | (&(stt->memory[stt->pc]))[1]);
+	}
+	else
+	{
+		stt->pc++;
+		stt->pc++;
+		stt->pc++;
+	}
+}
+
 void JPInstruction(struct State8080* stt)
 {
-	if (stt->sf.p == 1)
+	if (stt->sf.s == 0)
 	{
 		// unsigned char *currOperation = &(stt->memory[stt->pc]);
 		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
@@ -645,7 +671,7 @@ void JPInstruction(struct State8080* stt)
 
 void CPInstruction(struct State8080* stt)
 {
-	if (stt->sf.p)
+	if (stt->sf.s == 0)
 	{
 		// unsigned char *currOperation = &(stt->memory[stt->pc]);
 		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
@@ -829,6 +855,11 @@ void CPIInstruction(struct State8080* stt, unsigned char* byteOne)
 	//do aux carry
 	
 	++stt->pc;
+}
+
+void SPHLInstruction(struct State8080* stt)
+{
+	stt->sp = (unsigned short)((stt->h << 8) | stt->l);
 }
 
 void INInstruction(struct State8080* stt, unsigned char* byteOne)
