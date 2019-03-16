@@ -406,6 +406,29 @@ void ADCInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 	}
 }
 
+void ACIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+{
+	unsigned char* byteThree = &(stt->memory[stt->pc + 1]);
+	unsigned char intermediateValue = (unsigned char)(*byteThree);
+	if (stt->sf.cy)
+	{
+		++(intermediateValue);
+	}
+	(*byteOne) = (unsigned char)((*byteTwo) + intermediateValue);
+	CheckFlags(stt, (*byteOne), true, true, true);
+	if ((0xFF - (*byteTwo)) < intermediateValue)
+	{
+		stt->sf.cy = true;
+	}
+	unsigned char maskedByteTwo = (unsigned char)((*byteTwo) & 0b1111);
+	unsigned char maskedByteThree = (unsigned char)(intermediateValue & 0b1111);
+	if ((maskedByteTwo + maskedByteThree) > 0b1111)
+	{
+		stt->sf.ac = true;
+	}
+	stt->pc++;
+}
+
 void SUBInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
 {
 	unsigned char intermediateValue = (unsigned char)((~(*byteThree)) + 1);
@@ -421,6 +444,25 @@ void SUBInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 	{
 		stt->sf.ac = true;
 	}
+}
+
+void SUIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+{
+	unsigned char* byteThree = &(stt->memory[stt->pc + 1]);
+	unsigned char intermediateValue = (unsigned char)((~(*byteThree)) + 1);
+	(*byteOne) = (unsigned char)((*byteTwo) + intermediateValue);
+	CheckFlags(stt, (*byteOne), true, true, true);
+	if ((0xFF - (*byteTwo)) < intermediateValue)
+	{
+		stt->sf.cy = true;
+	}
+	unsigned char maskedByteTwo = (unsigned char)((*byteTwo) & 0b1111);
+	unsigned char maskedByteThree = (unsigned char)(intermediateValue & 0b1111);
+	if ((maskedByteTwo + maskedByteThree) > 0b1111)
+	{
+		stt->sf.ac = true;
+	}
+	stt->pc++;
 }
 
 void SBBInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
@@ -444,6 +486,29 @@ void SBBInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 	}
 }
 
+void SBIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+{
+	unsigned char* byteThree = &(stt->memory[stt->pc + 1]);
+	unsigned char intermediateValue = (unsigned char)((~(*byteThree)) + 1);
+	if (stt->sf.cy)
+	{
+		intermediateValue = (unsigned char)(intermediateValue + 0b11111111);
+	}
+	(*byteOne) = (unsigned char)((*byteTwo) + intermediateValue);
+	CheckFlags(stt, (*byteOne), true, true, true);
+	if ((0xFF - (*byteTwo)) < intermediateValue)
+	{
+		stt->sf.cy = true;
+	}
+	unsigned char maskedByteTwo = (unsigned char)((*byteTwo) & 0b1111);
+	unsigned char maskedByteThree = (unsigned char)(intermediateValue & 0b1111);
+	if ((maskedByteTwo + maskedByteThree) > 0b1111)
+	{
+		stt->sf.ac = true;
+	}
+	stt->pc++;
+}
+
 void ANAInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
 {
 	(*byteOne) = (unsigned char)((*byteTwo) & (*byteThree));
@@ -456,6 +521,15 @@ void XRAInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 	(*byteOne) = (unsigned char)((*byteTwo) ^ (*byteThree));
 	CheckFlags(stt, (*byteOne), true, true, true);
 	stt->sf.cy = false;
+}
+
+void XRIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
+{
+	unsigned char* byteThree = &(stt->memory[stt->pc + 1]);
+	(*byteOne) = (unsigned char)((*byteTwo) ^ (*byteThree));
+	CheckFlags(stt, (*byteOne), true, true, true);
+	stt->sf.cy = false;
+	stt->pc++;
 }
 
 void ORAInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
@@ -491,7 +565,126 @@ void JNZInstruction(struct State8080* stt)
 		// unsigned char *currOperation = &(stt->memory[stt->pc]);
 		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
 		// printf("%x", addressToUse);
-		stt->pc = (((&(stt->memory[stt->pc]))[2] << 8) | (&(stt->memory[stt->pc]))[1]);
+		stt->pc = (short unsigned int)(((&(stt->memory[stt->pc]))[2] << 8) | (&(stt->memory[stt->pc]))[1]);
+	}
+	else
+	{
+		stt->pc++;
+		stt->pc++;
+		stt->pc++;
+	}
+}
+
+void JNCInstruction(struct State8080* stt)
+{
+	if (stt->sf.cy == 0)
+	{
+		// unsigned char *currOperation = &(stt->memory[stt->pc]);
+		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
+		// printf("%x", addressToUse);
+		stt->pc = (short unsigned int)(((&(stt->memory[stt->pc]))[2] << 8) | (&(stt->memory[stt->pc]))[1]);
+	}
+	else
+	{
+		stt->pc++;
+		stt->pc++;
+		stt->pc++;
+	}
+}
+
+void JCInstruction(struct State8080* stt)
+{
+	if (stt->sf.cy)
+	{
+		// unsigned char *currOperation = &(stt->memory[stt->pc]);
+		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
+		// printf("%x", addressToUse);
+		stt->pc = (short unsigned int)(((&(stt->memory[stt->pc]))[2] << 8) | (&(stt->memory[stt->pc]))[1]);
+	}
+	else
+	{
+		stt->pc++;
+		stt->pc++;
+		stt->pc++;
+	}
+}
+
+void JPEInstruction(struct State8080* stt)
+{
+	if (stt->sf.p)
+	{
+		// unsigned char *currOperation = &(stt->memory[stt->pc]);
+		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
+		// printf("%x", addressToUse);
+		stt->pc = (short unsigned int)(((&(stt->memory[stt->pc]))[2] << 8) | (&(stt->memory[stt->pc]))[1]);
+	}
+	else
+	{
+		stt->pc++;
+		stt->pc++;
+		stt->pc++;
+	}
+}
+
+void JPInstruction(struct State8080* stt)
+{
+	if (stt->sf.p == 1)
+	{
+		// unsigned char *currOperation = &(stt->memory[stt->pc]);
+		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
+		// printf("%x", addressToUse);
+		stt->pc = (short unsigned int)(((&(stt->memory[stt->pc]))[2] << 8) | (&(stt->memory[stt->pc]))[1]);
+	}
+	else
+	{
+		stt->pc++;
+		stt->pc++;
+		stt->pc++;
+	}
+}
+
+void CPInstruction(struct State8080* stt)
+{
+	if (stt->sf.p)
+	{
+		// unsigned char *currOperation = &(stt->memory[stt->pc]);
+		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
+		// printf("%x", addressToUse);
+		stt->pc = (short unsigned int)(((&(stt->memory[stt->pc]))[2] << 8) | (&(stt->memory[stt->pc]))[1]);
+	}
+	else
+	{
+		stt->pc++;
+		stt->pc++;
+		stt->pc++;
+	}
+}
+
+void JPOInstruction(struct State8080* stt)
+{
+	if (!(stt->sf.p))
+	{
+		// unsigned char *currOperation = &(stt->memory[stt->pc]);
+		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
+		// printf("%x", addressToUse);
+		stt->pc = (short unsigned int)(((&(stt->memory[stt->pc]))[2] << 8) | (&(stt->memory[stt->pc]))[1]);
+	}
+	else
+	{
+		stt->pc++;
+		stt->pc++;
+		stt->pc++;
+	}
+}
+
+void JZInstruction(struct State8080* stt)
+{
+	if (stt->sf.z)
+	{
+		// unsigned char *currOperation = &(stt->memory[stt->pc]);
+		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
+		// printf("%x", addressToUse);
+		stt->pc = (short unsigned int)(((&(stt->memory[stt->pc]))[2] << 8) | (&(stt->memory[stt->pc]))[1]);
 	}
 	else
 	{
@@ -549,6 +742,16 @@ void CALLInstruction(struct State8080* stt)
  	stt->memory[stt->sp - 1] = (unsigned char)(((stt->pc+2) >> 8) & 0xff);
 	stt->memory[stt->sp - 2] = (unsigned char)((stt->pc+2) & 0b11111111);
 	stt->pc = (unsigned short)((( stt->memory[stt->pc + 2]) << 8) | (stt->memory[stt->pc + 1]));
+	stt->sp--;
+	stt->sp--;
+}
+
+// 8080 manual doc is weak on this instruction
+void CALLDirectInstruction(struct State8080* stt, unsigned short addressToCallTo )
+{
+ 	stt->memory[stt->sp - 1] = (unsigned char)(((stt->pc+2) >> 8) & 0xff);
+	stt->memory[stt->sp - 2] = (unsigned char)((stt->pc+2) & 0b11111111);
+	stt->pc = addressToCallTo;
 	stt->sp--;
 	stt->sp--;
 }
@@ -640,6 +843,12 @@ void OUTInstruction(struct State8080* stt)
 	unsigned char parameterOne = stt->memory[stt->pc + 1];	
 	ProcessOutput(parameterOne);
 	stt->pc++;
+}
+
+void PCHLInstruction(struct State8080* stt)
+{
+	unsigned short newPC = (unsigned short)((stt->h << 8) | stt->l);
+	stt->pc = newPC;
 }
 
 unsigned char ProcessInput(unsigned char byteOne)

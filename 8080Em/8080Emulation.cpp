@@ -1137,7 +1137,12 @@ void Execute8080Op(struct State8080 *stt)
 			if (!(stt->sf.z))
 			{
 				CALLInstruction(stt);
-				return;
+				return; 
+			}
+			else
+			{
+				stt->pc++;
+				stt->pc++;
 			}
 			break;
 		}
@@ -1151,65 +1156,201 @@ void Execute8080Op(struct State8080 *stt)
 			ADIInstruction(stt, &(stt->a), &(stt->a));
 			break;
 		}
-		case 0xc7: UnimplementedInstruction(stt); break;
-		case 0xc8: UnimplementedInstruction(stt); break;
+		case 0xc7:
+		{
+			CALLDirectInstruction(stt, 0);
+			return;
+			break;
+		}
+		case 0xc8:
+		{
+			if (stt->sf.z)
+			{
+				RETInstruction(stt);
+			}
+			break;
+		}
 		case 0xc9:
 		{
 			RETInstruction(stt);
 			break;
 		}
-		case 0xca: UnimplementedInstruction(stt); break;
+		case 0xca:
+		{
+			JZInstruction(stt);
+			return;
+			break;
+		}
 		case 0xcb: UnimplementedInstruction(stt); break;
-		case 0xcc: UnimplementedInstruction(stt); break;
+		case 0xcc:
+		{
+			if (stt->sf.z)
+			{
+				CALLInstruction(stt);
+				return; 
+			}
+			else
+			{
+				stt->pc++;
+				stt->pc++;
+			}
+			break;
+		}
 		case 0xcd:
 		{
 			CALLInstruction(stt);
 			return;
 			break;
 		}
-		case 0xce: UnimplementedInstruction(stt); break;
-		case 0xcf: UnimplementedInstruction(stt); break;
-		case 0xd0: UnimplementedInstruction(stt); break;
+		case 0xce: 
+		{
+			ACIInstruction(stt, &(stt->a), &(stt->a));
+			break;
+		}
+		case 0xcf:
+		{
+			CALLDirectInstruction(stt, 0x008);
+			return;
+			break;
+		}
+		case 0xd0:
+		{
+			if (!(stt->sf.cy))
+			{
+				RETInstruction(stt);
+			}
+			break;
+		}
 		case 0xd1:
 		{
 			POPInstruction(stt, &(stt->e), &(stt->d));
 			break;
 		}
-		case 0xd2: UnimplementedInstruction(stt); break;
+		case 0xd2:
+		{
+			JNCInstruction(stt);
+			return;
+		}
 		case 0xd3:
 		{
 			OUTInstruction(stt);
 			break;
 		}
-		case 0xd4: UnimplementedInstruction(stt); break;
+		case 0xd4:
+		{
+			if (!(stt->sf.cy))
+			{
+				CALLInstruction(stt);
+				return; 
+			}
+			else
+			{
+				stt->pc++;
+				stt->pc++;
+			}
+			break;
+		}
 		case 0xd5:
 		{
 			PUSHInstruction(stt, &(stt->e), &(stt->d));
 			break;
 		}
-		case 0xd6: UnimplementedInstruction(stt); break;
-		case 0xd7: UnimplementedInstruction(stt); break;
-		case 0xd8: UnimplementedInstruction(stt); break;
+		case 0xd6:
+		{
+			SUIInstruction(stt, &(stt->a), &(stt->a));
+			break;
+		}
+		case 0xd7:
+		{
+			CALLDirectInstruction(stt, 0x010);
+			return;
+			break;
+		}
+		case 0xd8:
+		{
+			if (stt->sf.cy)
+			{
+				RETInstruction(stt);
+			}
+			break;
+		}
 		case 0xd9: UnimplementedInstruction(stt); break;
-		case 0xda: UnimplementedInstruction(stt); break;
+		case 0xda:
+		{
+			JCInstruction(stt);
+			return;
+		}
 		case 0xdb:
 		{
 			INInstruction(stt, &(stt->a));
 			break;
 		}
-		case 0xdc: UnimplementedInstruction(stt); break;
+		case 0xdc:
+		{
+			if (stt->sf.cy)
+			{
+				CALLInstruction(stt);
+				return; 
+			}
+			else
+			{
+				stt->pc++;
+				stt->pc++;
+			}
+			break;
+		}
 		case 0xdd: UnimplementedInstruction(stt); break;
-		case 0xde: UnimplementedInstruction(stt); break;
-		case 0xdf: UnimplementedInstruction(stt); break;
-		case 0xe0: UnimplementedInstruction(stt); break;
+		case 0xde:
+		{
+			SBIInstruction(stt, &(stt->a), &(stt->a));
+			break;
+		}
+		case 0xdf:
+		{
+			CALLDirectInstruction(stt, 0x018);
+			return;
+			break;
+		}
+		case 0xe0:
+		{
+			if (stt->sf.p == 0)
+			{
+				RETInstruction(stt);
+			}
+			break;
+		}
 		case 0xe1:
 		{
 			POPInstruction(stt, &(stt->l), &(stt->h));
 			break;
 		}
-		case 0xe2: UnimplementedInstruction(stt); break;
-		case 0xe3: UnimplementedInstruction(stt); break;
-		case 0xe4: UnimplementedInstruction(stt); break;
+		case 0xe2:
+		{
+			JPOInstruction(stt);
+			return;
+			break;
+		}
+		case 0xe3:
+		{
+			unsigned char* firstByte = &(stt->memory[stt->sp]);
+			unsigned char* secondByte = &(stt->memory[stt->sp + 1]);
+			EXCHANGEInstruction(&(stt->l), firstByte, &(stt->h), secondByte);
+			break;
+		}
+		case 0xe4:
+		{
+			if (stt->sf.p == 0)
+			{
+				CALLInstruction(stt);
+				return; 
+			}
+			else
+			{
+				stt->pc++;
+				stt->pc++;
+			}
+			break;
+		}
 		case 0xe5:
 		{
 			PUSHInstruction(stt, &(stt->l), &(stt->h));
@@ -1220,40 +1361,116 @@ void Execute8080Op(struct State8080 *stt)
 			ANIInstruction(stt, &(stt->a), &(stt->a));
 			break;
 		}
-		case 0xe7: UnimplementedInstruction(stt); break;
-		case 0xe8: UnimplementedInstruction(stt); break;
-		case 0xe9: UnimplementedInstruction(stt); break;
-		case 0xea: UnimplementedInstruction(stt); break;
+		case 0xe7:
+		{
+			CALLDirectInstruction(stt, 0x020);
+			return;
+			break;
+		}
+		case 0xe8:
+		{
+			if (stt->sf.p)
+			{
+				RETInstruction(stt);
+			}
+			break;
+		}
+		case 0xe9:
+		{
+			PCHLInstruction(stt);
+			return;
+			break;
+		}
+		case 0xea:
+		{
+			JPEInstruction(stt);
+			return;
+			break;
+		}
 		case 0xeb:
 		{
 			EXCHANGEInstruction(&(stt->h), &(stt->d), &(stt->l), &(stt->e));
 			break;
 		}
-		case 0xec: UnimplementedInstruction(stt); break;
+		case 0xec:
+		{
+			if (stt->sf.p)
+			{
+				CALLInstruction(stt);
+				return; 
+			}
+			else
+			{
+				stt->pc++;
+				stt->pc++;
+			}
+			break;
+		}
 		case 0xed: UnimplementedInstruction(stt); break;
-		case 0xee: UnimplementedInstruction(stt); break;
-		case 0xef: UnimplementedInstruction(stt); break;
-		case 0xf0: UnimplementedInstruction(stt); break;
+		case 0xee:
+		{
+			XRIInstruction(stt, &(stt->a), &(stt->a));
+			break;
+		}
+		case 0xef:
+		{
+			CALLDirectInstruction(stt, 0x028);
+			return;
+			break;
+		}
+		case 0xf0:
+		{
+			// I think these parity instructions are off
+			if (stt->sf.p)
+			{
+				RETInstruction(stt);
+			}
+			break;
+		}
 		case 0xf1:
 		{
 			POPPSWInstruction(stt);
 			break;
 		}
-		case 0xf2: UnimplementedInstruction(stt); break;
+		case 0xf2:
+		{
+			// these are wrong too
+			JPInstruction(stt);
+			return;
+			break;
+		}
 		case 0xf3:
 		{
 			DIInstruction(stt);
 			break;
 		}
-		case 0xf4: UnimplementedInstruction(stt); break;
+		case 0xf4:
+		{
+			CPInstruction(stt);
+			return;
+			break;
+		}
 		case 0xf5:
 		{
 			PUSHPSWInstruction(stt);
 			break;
 		}
 		case 0xf6: UnimplementedInstruction(stt); break;
-		case 0xf7: UnimplementedInstruction(stt); break;
-		case 0xf8: UnimplementedInstruction(stt); break;
+		case 0xf7:
+		{
+			CALLDirectInstruction(stt, 0x030);
+			return;
+			break;
+		}
+		case 0xf8:
+		{
+			// I think these parity instructions are off
+			if (stt->sf.m)
+			{
+				RETInstruction(stt);
+			}
+			break;
+		}
 		case 0xf9: UnimplementedInstruction(stt); break;
 		case 0xfa: UnimplementedInstruction(stt); break;
 		case 0xfb:
