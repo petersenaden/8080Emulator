@@ -86,17 +86,13 @@ int main(int argc, char *argv[])
 
 	while (window.isOpen())
     {
-		if (time(NULL) - lastInterrupt > 1.0/60.0)
+		if (gameState->interrupt_enable && time(NULL) - lastInterrupt > 1.0/60.0)
 		{
+			printf("jasldfjlkasjdflkaslkdfjkalsdjfklajsdlkf\nasdkjfljadkslf");
 			PerformInterrupt(gameState, 2);
 			lastInterrupt = time(NULL);
 		}
 		Execute8080Op(gameState);
-		if (gameState->memory[0x19] != 0x21)
-		{
-			printf("hey");
-			exit(0);
-		}
 		int currArrPos = 0;
 		for(register int i = 0x2400; i < 0x3fff; ++i)
 		{

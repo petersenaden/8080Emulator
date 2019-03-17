@@ -10,7 +10,9 @@
 
 void UnimplementedInstruction(struct State8080* stt)
 {
-	(stt->pc)--;
+	unsigned char *currOp = &(stt->memory[stt->pc]);
+	printf("PC: 0x%02X\t", stt->pc);
+	printf("Operation: 0x%02X\n", *currOp);
 	// FIXME: output to log file
 	printf("UNIMPLEMENTED INSTRUCTION\n");
 	exit(1);
@@ -864,7 +866,8 @@ void SPHLInstruction(struct State8080* stt)
 
 void INInstruction(struct State8080* stt, unsigned char* byteOne)
 {
-	unsigned char parameterOne = stt->memory[stt->pc + 1];	
+	unsigned short parameterOne = stt->interrupt_value;
+	stt->interrupt_value = 0;	
 	(*byteOne) = ProcessInput(parameterOne);
 	stt->pc++;
 }

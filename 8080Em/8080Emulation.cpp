@@ -47,6 +47,7 @@ struct State8080* Initialize8080StateStruct(struct State8080 *st)
 	st->h = 0;
 	st->l = 0;
 	st->interrupt_enable = 0;
+	st->interrupt_value = 0;
 	st->sp = 0;
 	st->pc = 0;
 	st->memory = (unsigned char*)(calloc(65536, sizeof(unsigned char)));
@@ -58,7 +59,8 @@ void Execute8080Op(struct State8080 *stt)
 {
 	unsigned char *currOp = &(stt->memory[stt->pc]);
 	#ifdef PRINTOP
-	printf("SP:        0x%02X\t", stt->pc);
+	printf("SP: 0x%02X\t"		, stt->sp);
+	printf("PC: 0x%02X\t", stt->pc);
 	printf("Operation: 0x%02X\n", *currOp);
 	#endif
 	switch (*currOp)
@@ -281,9 +283,11 @@ void Execute8080Op(struct State8080 *stt)
 		case 0x30: UnimplementedInstruction(stt); break;
 		case 0x31: 
 		{
-			unsigned char* sPHighByte = (unsigned char*)(&(stt->sp));
-			unsigned char* sPLowByte = ((unsigned char*)(&(stt->sp))) + 1;
-			LXIInstruction(stt, sPHighByte, sPLowByte);
+			unsigned char byteThree = stt->memory[stt->pc + 2];
+			unsigned char byteTwo 	= stt->memory[stt->pc + 1];
+			stt->sp = (unsigned short)(byteThree << 8 | byteTwo);
+			stt->pc++;
+			stt->pc++;
 			break;
 		}
 		case 0x32: 

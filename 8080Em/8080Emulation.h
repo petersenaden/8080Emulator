@@ -19,6 +19,7 @@ struct State8080
 	unsigned char h;
 	unsigned char l;
 	unsigned short interrupt_enable;
+	unsigned short interrupt_value;
 	unsigned short sp;
 	unsigned short pc;
 	unsigned char* memory;
