@@ -74,3 +74,4 @@ void JMInstruction(struct State8080* stt);
 void CALLDirectInstruction(struct State8080* stt, unsigned short addressToCallTo );
 unsigned char ProcessInput(unsigned char byteOne);
 unsigned char ProcessOutput(unsigned char byteOne);
+void PerformInterrupt(struct State8080* stt, int interruptId);

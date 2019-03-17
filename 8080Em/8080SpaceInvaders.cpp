@@ -82,9 +82,15 @@ int main(int argc, char *argv[])
 	
     sf::RenderWindow window(sf::VideoMode(W, H, 32), "Space Invaders");
     sf::Uint8 pixels[W * H * 4] = {0}; 
+	long lastInterrupt = 0;
 
 	while (window.isOpen())
     {
+		if (time(NULL) - lastInterrupt > 1.0/60.0)
+		{
+			PerformInterrupt(gameState, 2);
+			lastInterrupt = time(NULL);
+		}
 		Execute8080Op(gameState);
 		int currArrPos = 0;
 		for(register int i = 0x2400; i < 0x3fff; ++i)
@@ -93,7 +99,6 @@ int main(int argc, char *argv[])
 			for (register int j = 0; j < 8; j++)
 			{
 				unsigned char currBit = (currByte >> j) & 1;
-				if (currBit) printf("hui");
 				SetColorOfPixel(pixels, currArrPos, currBit);
 				currArrPos+=4;
 			}

@@ -4,6 +4,7 @@
 #include<assert.h>
 #include<unistd.h>
 #include<errno.h>
+#include<time.h>
 #ifndef EMULATION8080
 #define EMULATION8080
 #include "8080Emulation.h"
@@ -1567,8 +1568,15 @@ int enterMain(int argc, char**argv)
 		ReadFileIntoMemory(gameState, rom, offset);
 
 	}
+	long lastInterrupt = 0;
  	for (;;)
 	{
+		printf("things");//%lld", (long long)time(NULL));
+		if (time(NULL) - lastInterrupt > 1.0/60.0)
+		{
+			PerformInterrupt(gameState, 2);
+			lastInterrupt = time(NULL);
+		}
 		Execute8080Op(gameState);
 	}
 

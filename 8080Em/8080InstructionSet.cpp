@@ -217,8 +217,8 @@ void RARInstruction(struct State8080* stt, unsigned char* byteOne)
 
 void DAAInstruction()
 {
-	printf("Unimplemented Instruction - DAA");
-	exit(0);
+	// printf("Unimplemented Instruction - DAA");
+	// exit(0);
 }
 
 void SHLDInstruction(struct State8080* stt, unsigned char* destByteOne, unsigned char* destByteTwo)
@@ -890,6 +890,20 @@ unsigned char ProcessInput(unsigned char byteOne)
 unsigned char ProcessOutput(unsigned char byteOne)
 {
 	return byteOne;
+}
+
+void PerformInterrupt(struct State8080* stt, int interruptId)
+{
+	unsigned short firstAddress = (short unsigned int)(stt->sp - 2);
+	unsigned short secondAddress = (short unsigned int)(stt->sp - 1);
+	stt->memory[firstAddress] = (unsigned char)(stt->pc >> 8);
+	stt->memory[secondAddress] = (unsigned char)(stt->pc);
+	--stt->sp;
+	--stt->sp;
+	
+	//The setup of the 8080 is such that the interrupts are always
+	//multiples of 8.
+	stt->pc = (unsigned short)(interruptId * 8);
 }
 
 
