@@ -1209,7 +1209,7 @@ void Execute8080Op(struct State8080 *stt)
 		}
 		case 0xcf:
 		{
-			CALLDirectInstruction(stt, 0x008);
+			CALLDirectInstruction(stt, 0x8);
 			return;
 			break;
 		}
@@ -1262,7 +1262,7 @@ void Execute8080Op(struct State8080 *stt)
 		}
 		case 0xd7:
 		{
-			CALLDirectInstruction(stt, 0x010);
+			CALLDirectInstruction(stt, 0x10);
 			return;
 			break;
 		}
@@ -1307,7 +1307,7 @@ void Execute8080Op(struct State8080 *stt)
 		}
 		case 0xdf:
 		{
-			CALLDirectInstruction(stt, 0x018);
+			CALLDirectInstruction(stt, 0x18);
 			return;
 			break;
 		}

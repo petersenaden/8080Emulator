@@ -688,7 +688,7 @@ void CPInstruction(struct State8080* stt)
 
 void JPOInstruction(struct State8080* stt)
 {
-	if (!(stt->sf.p))
+	if (stt->sf.p == 0)
 	{
 		// unsigned char *currOperation = &(stt->memory[stt->pc]);
 		// unsigned short int addressToUse = (unsigned short int)((currOperation[2] << 8) | currOperation[1]);
@@ -758,8 +758,8 @@ void ADIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 void RETInstruction(struct State8080* stt)
 {
 	stt->pc = (unsigned short)((stt->memory[stt->sp + 1] << 8) | stt->memory[stt->sp]);
-	++stt->sp;
-	++stt->sp;
+	stt->sp++;
+	stt->sp++;
 }
 
 // 8080 manual doc is weak on this instruction
@@ -788,7 +788,7 @@ void ANIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 	(*byteOne) = (unsigned char)((*byteTwo) & (dataToAnd));
 	CheckFlags(stt, (*byteOne), true, true, true);
 	stt->sf.cy = false;
-	++stt->pc;
+	stt->pc++;
 }
 
 void EXCHANGEInstruction(unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree, unsigned char* byteFour)
