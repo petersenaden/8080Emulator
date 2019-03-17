@@ -92,6 +92,11 @@ int main(int argc, char *argv[])
 			lastInterrupt = time(NULL);
 		}
 		Execute8080Op(gameState);
+		if (gameState->memory[0x19] != 0x21)
+		{
+			printf("hey");
+			exit(0);
+		}
 		int currArrPos = 0;
 		for(register int i = 0x2400; i < 0x3fff; ++i)
 		{

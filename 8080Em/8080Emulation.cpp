@@ -1451,6 +1451,7 @@ void Execute8080Op(struct State8080 *stt)
 		}
 		case 0xf5:
 		{
+			// might be wrong
 			PUSHPSWInstruction(stt);
 			break;
 		}

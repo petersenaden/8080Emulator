@@ -1,6 +1,6 @@
 #include<stdlib.h>
 #include<limits.h>
-#include <unistd.h>
+#include<unistd.h>
 #include<stdio.h>
 
 #ifndef INSTRUCTIONSET8080
@@ -270,11 +270,11 @@ void MOVInstruction(unsigned char* byteOne, unsigned char* byteTwo)
 
 void STAInstruction(struct State8080* stt, unsigned char* byteOne)
 {
-	unsigned char *currOperation = &(stt->memory[stt->pc]);
-	unsigned short int addressToUse = 0;
-	addressToUse = (unsigned short int)(*(currOperation + 1));
-	addressToUse = (unsigned short int)(addressToUse << 8);
-	addressToUse = (unsigned short int)(addressToUse + (*(currOperation + 2)));
+	//unsigned char *currOperation = &(stt->memory[stt->pc]);
+	unsigned short int addressToUse = (unsigned short)((stt->memory[stt->pc + 2] << 8) | stt->memory[stt->pc + 1]);
+	// addressToUse = (unsigned short int)(*(currOperation + 1));
+	// addressToUse = (unsigned short int)(addressToUse << 8);
+	// addressToUse = (unsigned short int)(addressToUse + (*(currOperation + 2)));
 	stt->memory[addressToUse] = (*byteOne);
 	(stt->pc)++;
 	(stt->pc)++;
@@ -733,8 +733,8 @@ void PUSHInstruction(struct State8080* stt, unsigned char* byteOne, unsigned cha
 	unsigned short secondAddress = (short unsigned int)(stt->sp - 1);
 	stt->memory[firstAddress] = (*byteOne);
 	stt->memory[secondAddress] = (*byteTwo);
-	--stt->sp;
-	--stt->sp;
+	stt->sp--;
+	stt->sp--;
 }
 
 void ADIInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo)
@@ -898,8 +898,8 @@ void PerformInterrupt(struct State8080* stt, int interruptId)
 	unsigned short secondAddress = (short unsigned int)(stt->sp - 1);
 	stt->memory[firstAddress] = (unsigned char)(stt->pc >> 8);
 	stt->memory[secondAddress] = (unsigned char)(stt->pc);
-	--stt->sp;
-	--stt->sp;
+	stt->sp--;
+	stt->sp--;
 	
 	//The setup of the 8080 is such that the interrupts are always
 	//multiples of 8.
