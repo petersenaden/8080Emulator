@@ -1,8 +1,11 @@
+// https://stackoverflow.com/a/14387
+#define _CRT_SECURE_NO_DEPRECATE
+
 #include<stdlib.h>
 #include<stdint.h>
 #include<stdio.h>
 #include<assert.h>
-#include<unistd.h>
+#include<windows.h>
 #include<errno.h>
 #include<time.h>
 #ifndef EMULATION8080
@@ -1573,7 +1576,7 @@ int enterMain(int argc, char**argv)
 		ReadFileIntoMemory(gameState, rom, offset);
 
 	}
-	long lastInterrupt = 0;
+	time_t lastInterrupt = 0;
  	for (;;)
 	{
 		printf("things");//%lld", (long long)time(NULL));

@@ -8,6 +8,7 @@ LDA $0009
 This is called "Absolute." If this is SNES, and DP was set to 0000 in the previous example, both of these would load from the same location. The DP load would be slightly faster, though.
 */
 
+#define _CRT_SECURE_NO_DEPRECATE
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>

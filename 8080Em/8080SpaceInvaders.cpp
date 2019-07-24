@@ -1,5 +1,5 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
+//#include <SFML/Graphics.hpp>
+//#include <SFML/Window.hpp>
 #include <cstdlib>
 #include<stdlib.h>
 #include<stdint.h>
@@ -19,6 +19,8 @@ void SetColorOfPixel(sf::Uint8* pixels, int currArrPos, int currBit)
 {
 	if (currBit)
 	{
+		printf("jalksdfklalskjdfklajsldkfjaskdjlf\n\n\n\n\n\n\n\n\n");
+		exit(1);
 		pixels[currArrPos] = 255;
 		pixels[currArrPos+1] = 255;
 		pixels[currArrPos+2] = 255;

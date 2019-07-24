@@ -1,6 +1,6 @@
 #include<stdlib.h>
 #include<limits.h>
-#include<unistd.h>
+#include<windows.h>
 #include<stdio.h>
 
 #ifndef INSTRUCTIONSET8080
@@ -368,7 +368,7 @@ void LDAInstruction(struct State8080* stt)
 
 void HLTInstruction()
 {
-	sleep(50000);
+	Sleep(50000);
 }
 
 void ADDInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char* byteTwo, unsigned char* byteThree)
@@ -868,7 +868,7 @@ void INInstruction(struct State8080* stt, unsigned char* byteOne)
 {
 	unsigned short parameterOne = stt->interrupt_value;
 	stt->interrupt_value = 0;	
-	(*byteOne) = ProcessInput(parameterOne);
+	(*byteOne) = ProcessInput((unsigned char)(parameterOne));
 	stt->pc++;
 }
 
