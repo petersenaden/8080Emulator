@@ -1,7 +1,2 @@
-﻿  8080Disassembler.cpp
-  8080Emulation.cpp
-  8080InstructionSet.cpp
-  8080SpaceInvaders.cpp
-  meet.cpp
-  Generating Code...
-  SpaceRedux.vcxproj -> C:\Users\John Smith\Desktop\Space2\SpaceRedux\Debug\SpaceRedux.exe
+﻿  8080InstructionSet.cpp
+LINK : fatal error LNK1104: cannot open file 'C:\Users\John Smith\Desktop\Desktop\Programs\C++\Space2\SpaceRedux\Debug\SpaceRedux.exe'

@@ -33,6 +33,10 @@ void CheckFlags(struct State8080* stt, unsigned char checkByte, bool checkSignFl
 		{
 			stt->sf.s = 1;
 		}
+		else
+		{
+			stt->sf.s = 0;
+		}
 	}
 	if (checkZeroFlag)
 	{
@@ -48,7 +52,7 @@ void CheckFlags(struct State8080* stt, unsigned char checkByte, bool checkSignFl
 				totalOdds++;
 			}
 		}
-		stt->sf.p = (totalOdds % 2 == 1);
+		stt->sf.p = (totalOdds % 2 == 0);
 	}
 }
 
@@ -77,29 +81,29 @@ void INXInstruction(unsigned char* byteOne, unsigned char* byteTwo)
 	numberToUse = (unsigned short int)(*byteOne);
 	numberToUse = (unsigned short int)(numberToUse << 8);
 	numberToUse = (unsigned short int)(numberToUse + (*byteTwo));
-	numberToUse++;
-	(*byteOne) = (unsigned char)(numberToUse & 0xFF);
-	(*byteTwo) = (unsigned char)(numberToUse >> 8);
+	++numberToUse;
+	*byteOne = ((unsigned char)(numberToUse >> 8));
+	*byteTwo = ((unsigned char)numberToUse);
 }
 
 // Probably busted based on the AC flag
 void INRInstruction(struct State8080* stt, unsigned char* byteOne)
 {
-	(*byteOne)++;
+	++(*byteOne);
 	CheckFlags(stt, (*byteOne), true, true, true);
-	// Carry flag
-	if ((*byteOne) == 0)
-	{
-		stt->sf.cy = 1;
-	}
+	//// Carry flag
+	//if ((*byteOne) == 0)
+	//{
+	//	stt->sf.cy = 1;
+	//}
 	bool flipACFlag = true;
 	// check endianness
 	for (unsigned int i = 0; i < 4; i++)
 	{
-			if ((((*byteOne) >> i) & 1) != 1)
-			{
-				flipACFlag = false;
-			}
+		if ((((*byteOne) >> i) & 1) != 1)
+		{
+			flipACFlag = false;
+		}
 	}
 	if (flipACFlag)
 	{
@@ -109,23 +113,16 @@ void INRInstruction(struct State8080* stt, unsigned char* byteOne)
 
 void DCRInstruction(struct State8080* stt, unsigned char* byteOne)
 {
-	// Carry flag
-	if (1 > (*byteOne))
-	{
-		stt->sf.cy = 1;
-	}
-	--(*byteOne);
+	//// Carry flag
+	//if (1 > (*byteOne))
+	//{
+	//	stt->sf.cy = 1;
+	//}
+	(*byteOne) -= 1;
 	CheckFlags(stt, (*byteOne), true, true, true);
 	// check endianness
 	// Only way AC can be set if is LS 4 bits are zero. 
-	bool flipACFlag = true;
-	for (unsigned int i = 0; i < 4; i++)
-	{
-			if ((((*byteOne) >> i) & 1) != 0)
-			{
-				flipACFlag = false;
-			}
-	}
+	bool flipACFlag = ((*byteOne) & 0xF) > 0;
 	if (flipACFlag)
 	{
 		stt->sf.ac = 1;
@@ -161,8 +158,8 @@ void DADInstruction(struct State8080* stt, unsigned char* byteOne, unsigned char
 	secondCompositeRegister = (unsigned short int)(secondCompositeRegister + (*byteFour));
 	
 	unsigned short additiveResult = (unsigned short )(firstCompositeRegister + secondCompositeRegister);
-	(*byteTwo) = (unsigned char)(additiveResult & 0b1111);
-	(*byteOne) = (unsigned char)(additiveResult >> 4);
+	(*byteTwo) = (unsigned char)(additiveResult & 0b11111111);
+	(*byteOne) = (unsigned char)(additiveResult >> 8);
 	
 	int carryCheck = firstCompositeRegister + secondCompositeRegister;
 	if (carryCheck > USHRT_MAX)
@@ -176,7 +173,7 @@ void LDAXInstruction(struct State8080* stt, unsigned char* byteOne, unsigned cha
 	unsigned short int addressToUse = 0;
 	addressToUse = (unsigned short int)(*byteOne);
 	addressToUse = (unsigned short int)(addressToUse << 8);
-	addressToUse = (unsigned short int)(addressToUse + (*byteTwo));
+	addressToUse = (unsigned short int)(addressToUse | (*byteTwo));
 	*destByte = stt->memory[addressToUse];
 }
 
@@ -196,8 +193,9 @@ void RRCInstruction(struct State8080* stt, unsigned char* byteOne)
 {
 	unsigned char zeroBit = ((*byteOne) & 1);
 	stt->sf.cy = zeroBit;
+	zeroBit = ((unsigned char)(zeroBit << 7) & 0b11111111);
 	(*byteOne) = (unsigned char)((*byteOne) >> 1);
-	(*byteOne) = (*byteOne) & ((unsigned char)(zeroBit << 7));
+	(*byteOne) = (*byteOne) & zeroBit;
 }
 
 void RALInstruction(struct State8080* stt, unsigned char* byteOne)
@@ -345,7 +343,7 @@ void MVIMInstruction(struct State8080* stt)
 	unsigned short int addressToUse = 0;
 	addressToUse = (unsigned short int)(stt->h);
 	addressToUse = (unsigned short int)(addressToUse << 8);
-	addressToUse = (unsigned short int)(addressToUse + (stt->l));
+	addressToUse = (unsigned short int)(addressToUse | (stt->l));
 	unsigned char* charToManipulate = &(stt->memory[addressToUse]);
 	unsigned char charToPersist = stt->memory[stt->pc + 1];
 	*(charToManipulate) = charToPersist;
@@ -354,12 +352,13 @@ void MVIMInstruction(struct State8080* stt)
 
 void LDAInstruction(struct State8080* stt)
 {
-	unsigned char highByteAddress = stt->memory[stt->pc + 1];
-	unsigned char lowByteAddress = stt->memory[stt->pc + 2];
+	unsigned char highByteAddress = stt->memory[stt->pc + 2];
+	unsigned char lowByteAddress = stt->memory[stt->pc + 1];
 	unsigned short int addressToUse = 0;
 	addressToUse = (unsigned short int)(highByteAddress);
 	addressToUse = (unsigned short int)(addressToUse << 8);
 	addressToUse = (unsigned short int)(addressToUse + (lowByteAddress));
+	//fprintf(stdout, "AddressToUse: 0x%02X\n", addressToUse);
 	unsigned char charToManipulate = stt->memory[addressToUse];
 	stt->a = charToManipulate;
 	stt->pc++;
@@ -831,8 +830,8 @@ void PUSHPSWInstruction(struct State8080* stt)
 		(stt->sf.ac << 3));
 	stt->memory[stt->sp - 2] = aggregateFlags;
 	stt->memory[stt->sp - 1] = stt->a;
-	--stt->sp;
-	--stt->sp;
+	--(stt->sp);
+	--(stt->sp);
 }
 
 void EIInstruction(struct State8080* stt)
@@ -851,12 +850,12 @@ void CPIInstruction(struct State8080* stt, unsigned char* byteOne)
 	unsigned char firstRegister = (*byteOne);
 	unsigned char secondRegister = (unsigned char)((~(byteTwo)) + 1);
 	unsigned char result = (unsigned char)(firstRegister + secondRegister);
-	CheckFlags(stt, (*byteOne), true, true, true);
+	CheckFlags(stt, result, true, true, true);
 	stt->sf.z = (firstRegister == (byteTwo));
 	stt->sf.cy = (char)(result >> 7);
 	//do aux carry
 	
-	++stt->pc;
+	(stt->pc)++;
 }
 
 void SPHLInstruction(struct State8080* stt)

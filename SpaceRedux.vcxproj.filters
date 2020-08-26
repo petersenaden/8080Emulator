@@ -27,9 +27,6 @@
     <ClCompile Include="Sources\8080SpaceInvaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\meet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\8080Emulation.h">

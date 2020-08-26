@@ -18,7 +18,7 @@
 #include "8080InstructionSet.h"
 #endif
 
-#define PRINTOP false
+#define PRINTOP FALSE
 
 int fopen_safe2(FILE **f, const char *name, const char *mode) {
     int ret = 0;
@@ -56,15 +56,30 @@ struct State8080* Initialize8080StateStruct(struct State8080 *st)
 	st->memory = (unsigned char*)(calloc(65536, sizeof(unsigned char)));
 	InitializeStateFlagsStruct(&(st->sf));
 	return st;
-}
+} 
+
+int y = 0;
 
 void Execute8080Op(struct State8080 *stt)
 {
 	unsigned char *currOp = &(stt->memory[stt->pc]);
 	#ifdef PRINTOP
-	printf("SP: 0x%02X\t"		, stt->sp);
-	printf("PC: 0x%02X\t", stt->pc);
-	printf("Operation: 0x%02X\n", *currOp);
+	fprintf(stdout, "SP: 0x%02X\t"		, stt->sp);
+	fprintf(stdout, "PC: 0x%02X\t", stt->pc);
+	fprintf(stdout, "Operation: 0x%02X\t", *currOp);
+	fprintf(stdout, "A: 0x%02X\t", stt->a);
+	fprintf(stdout, "B: 0x%02X\t", stt->b);
+	fprintf(stdout, "C: 0x%02X\t", stt->c);
+	fprintf(stdout, "D: 0x%02X\t", stt->d);
+	fprintf(stdout, "E: 0x%02X\t", stt->e);
+	fprintf(stdout, "H: 0x%02X\t", stt->h);
+	fprintf(stdout, "L: 0x%02X\t", stt->l);
+
+	fprintf(stdout, "Z: %c\t", stt->sf.z ? '1' : '0');
+	fprintf(stdout, "S: %c\t", stt->sf.s ? '1' : '0');
+	fprintf(stdout, "P: %c\t", stt->sf.p ? '1' : '0');
+	fprintf(stdout, "CY: %c\n", stt->sf.cy ? '1' : '0');
+	//fprintf(stdout, "AC: %c\n", stt->sf.ac ? '1' : '0');
 	#endif
 	switch (*currOp)
 	{
@@ -707,7 +722,7 @@ void Execute8080Op(struct State8080 *stt)
 			addressToUse = (unsigned short int)(addressToUse << 8);
 			addressToUse = (unsigned short int)(addressToUse | (stt->l));
 			unsigned char* charToManipulate = &(stt->memory[addressToUse]);
-			MOVInstruction(&(stt->a), charToManipulate);
+			MOVInstruction(charToManipulate, &(stt->a));
 			break;
 		}
 		case 0x78:
